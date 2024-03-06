@@ -1,0 +1,52 @@
+.Home{
+    height: 100vh;
+    width: 100vw;
+
+    .Main{
+        position: fixed;
+        width: 95vw;
+        left: 5vw;
+        height: 100vh;
+    
+        .loadLinks{
+            height: 70vh;
+            position: absolute;
+            top: 25vh;
+            padding: 5vh;
+            // background-color: black;
+            width: 100%;
+            overflow-y: scroll;
+
+            .request{
+                width: 80%;
+                margin-left: 10%;
+                min-height: 20vh;
+                
+                
+                .details{
+                    display: flex;
+                    background-color: antiquewhite;
+                    height: 8vh;
+
+                    img{
+                        height: 6vh;
+                        margin-top: 1vh;
+                        border-radius: 50%;
+                    }
+                    .name{
+                        height: 6vh;
+                        margin-top: 1vh;
+                        margin-left: 3vh;
+                        display: flex;
+                        padding-top: 0.5vh;
+                        font-size: 3vh;
+                    }
+                }
+                .travelDetails{
+                    background-color: beige;
+
+                }
+            }
+        }
+    }
+}
