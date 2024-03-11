@@ -7,6 +7,15 @@
         width: 95vw;
         left: 5vw;
         height: 100vh;
+        background-color: rgba(240, 248, 255, 0.746);
+
+        .bg{
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            opacity: 0.15;
+        }
     
         .loadLinks{
             height: 70vh;
@@ -18,14 +27,31 @@
             overflow-y: scroll;
 
             .request{
-                width: 80%;
+                width: 70%;
+                padding: 2%;
+                margin-bottom: 3vh;
+                border-radius: 15px;
                 margin-left: 10%;
                 min-height: 20vh;
-                
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 14px 15px, rgba(0, 0, 0, 0.3) 0px -2px 10px, rgba(0, 0, 0, 0.28) 0px 2px 3px, rgba(0, 0, 0, 0.17) 0px 2px 2px, rgba(0, 0, 0, 0.09) 0px -1px 2px;
+                background-color: aliceblue;
+
+
+                .desc{
+                    display: flex;
+
+                    .date{
+                        margin-left: 10%;
+                    }
+                    .details{
+                        width: 70%;
+                        margin-left: 5%;
+                    }
+                }
                 
                 .details{
                     display: flex;
-                    background-color: antiquewhite;
+                    // background-color: antiquewhite;
                     height: 8vh;
 
                     img{
@@ -43,8 +69,32 @@
                     }
                 }
                 .travelDetails{
-                    background-color: beige;
+                    // background-color: beige;
+                    .start{
+                        background-color: rgb(236, 236, 236);
+                        width: 90%;
+                        margin-left: 5%;
+                        border-radius: 10px;
+                        height: 2vh;
+                        padding: 2%;
+                        margin-bottom: 6vh;
+                    }
+                    .destination{
+                        background-color: green;
+                        width: 90%;
+                        margin-left: 5%;
+                        border-radius: 10px;
+                        height: 2vh;
+                        padding: 2%;
+                    }
 
+                    img{
+                        position: absolute;
+                        z-index: -1;
+                        height: 8vh;
+                        left: 16.6vw;
+                        margin-top: -8vh;
+                    }
                 }
             }
         }
