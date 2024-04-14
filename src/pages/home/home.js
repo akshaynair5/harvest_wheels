@@ -1,7 +1,7 @@
 import './home.scss'
 import Sidebar from '../../components/sidebar/sidebar'
 import linkLine from '../../images/linkLine.png'
-import bg from '../../images/bg.jpeg'
+import bg from '../../images/Background.png'
 
 function Home(){
     const obj =  [{
@@ -83,10 +83,10 @@ function Home(){
     
     ]
     return(
-        <div className='Home'>
+        <div className='Home' style={{backgroundImage:`url(${bg})`}}>
             <Sidebar/>
             <div className='Main'>
-                <img src={bg} className='bg'></img>
+ 
                 <div className='loadLinks'>
                     {
                         obj.map((loadLink)=>{

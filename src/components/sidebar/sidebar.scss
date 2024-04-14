@@ -1,40 +1,99 @@
-.Sidebar{
-    height: 100vh;
-    width: 5vw;
-    color: aliceblue;
-    position: fixed;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    box-shadow: rgba(0, 0, 0, 0.4) 0px 34px 35px, rgba(0, 0, 0, 0.3) 0px -10px 20px, rgba(0, 0, 0, 0.28) 0px 2px 3px, rgba(0, 0, 0, 0.17) 0px 6px 6px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-
-    .link{
-        width: 100%;
-        height: 10vh;
-        margin-bottom: 2vh;
-        margin-top: 2vh;
-        img{
-            width: 50%;
-            margin-left: 25%;
-            height: 50%;
-            margin-top: 25%;
+.Navbar{
+    .topNav{
+        height: 12vh;
+        display: flex;
+        background-color: transparent;
+        border: none;
+        .btn{
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            height: 8vh;
+            margin-top: 2vh;
+            margin-left: 1vw;
+        }
+        .title{
+            height: 8vh;
+            margin-top:2vh;
+            margin-left: 5vw;
+            width: 15vw;
+        }
+        .profilePhoto{
+            margin-left: 65vw;
+            border-radius: 8px;
+            height: 8vh;
+            margin-top: 2vh;
         }
     }
-    .logout{
-        background-color: transparent;
-        width: 100%;
-        height: 10vh;
-        position: absolute;
-        bottom: 2vh;
-        border: none;
-        cursor: pointer;
+    .outer{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.622);
 
-        img{
-            height: 50%;
-            margin-top: 25%;
-            width: 50%;
-            margin-left: 25%;
-            padding: 0%;
+        .Sidebar{
+            height: 100vh;
+            width: 30vw;
+            color: aliceblue;
+            position: absolute;
+            left: 0;
+            top:0;
+    
+            z-index: 5;
+            background-color: darkgreen;
+            display: flex;
+            flex-direction: column;
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 34px 35px, rgba(0, 0, 0, 0.3) 0px -10px 20px, rgba(0, 0, 0, 0.28) 0px 2px 3px, rgba(0, 0, 0, 0.17) 0px 6px 6px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+            
+            .title2{
+                height: 10vh;
+                width: 75%;
+                margin-left: 12.5%;
+                margin-top: 3vh;
+                margin-bottom: 10vh;
+            }
+            .link{
+                width: 100%;
+                height: 10vh;
+                margin-bottom: 2vh;
+                margin-top: 2vh;
+                text-decoration: none;
+                color: azure;
+                display: flex;
+                margin-left: 2vw;
+                img{
+                    width: 100%;
+                    margin-left: 25%;
+                    height: 50%;
+                    margin-top: 25%;
+                }
+                p{
+                    height: 100%;
+                    font-size: 3vh;
+                    margin-left: 4vw;
+                    margin-top: 1.8vh;
+                }
+            }
+            .logout{
+                background-color: transparent;
+                width: 100%;
+                height: 10vh;
+                position: absolute;
+                bottom: 2vh;
+                border: none;
+                cursor: pointer;
+        
+                img{
+                    height: 50%;
+                    margin-top: 25%;
+                    width: 50%;
+                    margin-left: 25%;
+                    padding: 0%;
+                }
+            }
         }
     }
 }

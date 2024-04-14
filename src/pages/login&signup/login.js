@@ -13,7 +13,7 @@ function Login(){
         const password = e.target[1].value
         try{
             await signInWithEmailAndPassword(auth,email,password)
-            navigate("/Profile")
+            navigate("/home")
         }
         catch(err){
             setErr(true)

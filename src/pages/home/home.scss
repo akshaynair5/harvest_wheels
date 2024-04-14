@@ -4,10 +4,14 @@
 
     .Main{
         position: fixed;
-        width: 95vw;
+        width: 90vw;
+        top: 16vh;
+        border-radius: 15px;
         left: 5vw;
-        height: 100vh;
-        background-color: rgba(240, 248, 255, 0.746);
+        height: 80vh;
+        border: none;
+        // background-color: black;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 
         .bg{
             position: fixed;
@@ -19,7 +23,6 @@
     
         .loadLinks{
             height: 70vh;
-            position: absolute;
             top: 25vh;
             padding: 5vh;
             // background-color: black;
