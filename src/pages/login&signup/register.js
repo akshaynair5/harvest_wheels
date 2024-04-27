@@ -23,34 +23,34 @@ function Register (){
         const password = e.target[5].value
         const DP = e.target[6].files[0]
         const storageid = new Date().getTime()
-        const User = await createUserWithEmailAndPassword(auth,email,password)
-        const storageRef = ref(storage,`${storageid}`)
-        await uploadBytesResumable(storageRef,DP)
-            .then(()=>{
-                getDownloadURL(storageRef).then(async (downloadURL) => {
-                    try{
-                        await updateProfile(User.user,{
-                            displayName,
-                            photoURL:downloadURL,
-                        })
-                        await setDoc(doc(db, "users", User.user.uid), {
-                            uid: User.user.uid,
-                            displayName,
-                            email,
-                            profileUrl: downloadURL,
-                            number:number,
-                            job:job,
-                            placeOfResidence:POR,
-                            links:[],
-                            date:storageRef
-                        });
-                    }
-                    catch(err){
-                        setErr(true)
-                    }
-                navigate("/Home")
+        await createUserWithEmailAndPassword(auth,email,password)
+            .then(async (User)=>{
+                console.log(User.user.uid)
+                const storageRef = ref(storage,`${storageid}`)
+                await uploadBytesResumable(storageRef,DP)
+                    .then(()=>{
+                        getDownloadURL(storageRef).then(async (downloadURL) => {
+                            try{
+                                await setDoc(doc(db, "users", User.user.uid), {
+                                    uid: User.user.uid,
+                                    displayName:displayName,
+                                    email:email,
+                                    profileUrl: downloadURL,
+                                    number:number,
+                                    job:job,
+                                    placeOfResidence:POR,
+                                    links:[],
+                                    // date:storageRef
+                                });
+                            }
+                            catch(err){
+                                console.log(err)
+                                setErr(true)
+                            }
+                        navigate("/Home")
+                    })
+                })
             })
-        })
         
 
     }

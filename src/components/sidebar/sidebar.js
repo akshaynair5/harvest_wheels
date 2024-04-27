@@ -46,7 +46,7 @@ function Sidebar(){
             <div className='topNav'>
                 <button onClick={()=>{setSidebarView(true)}} className='btn'><img src={btn}></img></button>
                 <img src={title} className='title'></img>
-                <img src={userData.profileUrl} className='profilePhoto'></img>
+                <img src={userData.profileUrl} className='profilePhoto' onClick={()=>{signOut(auth)}}></img>
             </div>
             {
                 sidebarView && 
@@ -58,15 +58,15 @@ function Sidebar(){
                             <p>Home</p>
                         </div>
                         <div className='link'>
-                            <Link to='/Home'><img src={explore}></img></Link>
+                            <Link to='/Explore'><img src={explore}></img></Link>
                             <p>Explore</p>
                         </div>
                         <div className='link'>
-                            <Link to='/Home'><img src={notifications}></img></Link>
+                            <Link to='/Notifications'><img src={notifications}></img></Link>
                             <p>Notifications</p>
                         </div>
                         <div className='link'>
-                            <Link to='/Home'><img src={profile}></img></Link>
+                            <Link to='/Profile'><img src={profile}></img></Link>
                             <p>Profile</p>
                         </div>
                         <button className='logout' onClick={()=>{signOut(auth)}}><img src={logout}></img></button>

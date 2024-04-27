@@ -6,6 +6,9 @@ import { Navigate } from 'react-router-dom';
 import { Authcontext } from './contextProvider';
 import { useContext } from 'react';
 import Home from './pages/home/home';
+import Profile from './pages/profile/profile';
+import Explore from './pages/explore/explore';
+import Notifications from './pages/notifications/notifications';
 function App() {
   const {currentUser} = useContext(Authcontext)
   const ProtectedRoute = ({children})=>{
@@ -24,6 +27,9 @@ function App() {
         <Route exact path="/Harvest_Wheels" element={<Register/>}></Route>
         <Route  path="/Login" element={<Login/>}></Route>
         <Route  path="/Home" element={<ProtectedRoute> <Home/> </ProtectedRoute>}></Route>
+        <Route  path="/Profile" element={<ProtectedRoute> <Profile/> </ProtectedRoute>}></Route>
+        <Route  path="/Explore" element={<ProtectedRoute> <Explore/> </ProtectedRoute>}></Route>
+        <Route  path="/Notifications" element={<ProtectedRoute> <Notifications/> </ProtectedRoute>}></Route>
       </Routes>
     </BrowserRouter>
   );
