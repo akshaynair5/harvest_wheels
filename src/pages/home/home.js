@@ -10,34 +10,13 @@ import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
+import ReactMapGl from 'react-mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import data from '../../in.json'
+
+const TOKEN = process.env.API_ACCESS_TOKEN
 
 function Home(){
-
-    const obj =  [
-        {
-            userId:'b4oxnn4Gv7XTUuTB4s8i7ui7h3G2"',
-            profileURL:'https://firebasestorage.googleapis.com/v0/b/harvest-wheels.appspot.com/o/1709743834705?alt=media&token=8c67be27-a5f4-41e0-b790-afe8984393bd',
-            name:'Akshay',
-            type:'request',
-            start:'pune',
-            destination:'thane',
-            date:'16/08/2024',
-            details:'I have 2m^2 of space left in my vehicle',
-            spaceLeft:5,
-            expiry:false,
-            price:5,
-            reply:{
-                type:[
-                    {
-                        replyUserId:"b4oxnn4Gv7XTUuTB4s8i7ui7h3G2",
-                        replyMessage:'Intrested',
-                        space:6,
-                        price:500
-                    }
-                ]
-            }
-        }
-    ]
 
     const userRef = collection(db,"users");
     const loadLinksRef = collection(db,"loadLinks");
@@ -45,6 +24,7 @@ function Home(){
     const [userData,setUD] = useState({});
     const [userLinksData,setULD] = useState([]);
     const [str,setStr] = useState("");
+    const [space,setSpace] = useState();
     
     const [currentView,setCurrentView] = useState({});
     const [view,setView] = useState(false);
@@ -52,6 +32,7 @@ function Home(){
 
 
     useEffect(()=>{
+            // console.log(data);
             const FetchUserData = async()=>{
                 const q=query(userRef,where("uid","==",`${currentUser.uid}`))
                 const querySnapShot1 = await getDocs(q)
@@ -110,9 +91,27 @@ function Home(){
         setView(true);
     }
     
-    const bookSpace = ()=>{
-        
+    const bookSpace = async()=>{
+        console.log(currentView);
+        let temp = currentView.comments;
+        let now = new Date().getTime()
+
+
+        temp = [...temp,{uid:userData.uid,name:userData.displayName,profileURL:userData.profileUrl,space:space,price:space*currentView.price,status:false,commentId:now}];
+
+        if(userData.profileUrl){
+            console.log(temp)
+            await updateDoc(doc(db, 'loadLinks', currentView.userId+currentView.time), {
+                comments:temp
+            });
+        }
+
+
     }
+
+    useEffect(()=>{
+        console.log(space)
+    },[space])
     return(
         <div className='Home' style={{backgroundImage:`url(${bg})`}}>
             <Sidebar/>
@@ -142,10 +141,11 @@ function Home(){
                             <input
                                 type="range"
                                 min={0}
-                                max={100} // Replace 100 with your desired maximum value
+                                max={currentView.spaceLeft}
+                                onChange={(e)=>{setSpace(e.target.value)}}
                             />
 
-                            <button onClick={()=>{bookSpace()}}>Book Now</button>
+                            <input type='button' onClick={()=>{bookSpace()}} placeholder='book'></input>
                         </div>
                     </div>
                 } 
@@ -154,6 +154,15 @@ function Home(){
                     {
                         userLinksData.map((loadLink)=>{
                             if(loadLink.type == 'posting'){
+                                let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
+                                console.log(obj)
+
+                                {/* console.log(lat) */}
                                 return(
                                     <div className='request'>
                                         <div className='userInfo'>
@@ -172,6 +181,20 @@ function Home(){
                                             </div>
                                         </div>
                                         <div className='map'>
+                                            {/* <ReactMapGl
+                                                mapboxAccessToken = {TOKEN}
+                                                initailViewState={{
+                                                    longitude:28.6448,
+                                                    latitude:78.004,
+                                                    zoom:6
+                                                }}
+                                                mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
+
+                                            >
+
+                                            </ReactMapGl> */}
+
+                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
                                             
                                         </div>
                                         <div className='Details'>

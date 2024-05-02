@@ -21,7 +21,6 @@ function Sidebar(){
     const [userData,setUD] = useState({});
 
     useEffect(()=>{
-        console.log(currentUser)
         const getUserDetails = async ()=>{
             const q = query(userDetailsRef,where("uid","==",`${currentUser.uid}`))
             const querySnapShot1 = await getDocs(q)
@@ -30,9 +29,7 @@ function Sidebar(){
                 querySnapShot1.forEach((doc)=>{
                     temp.push(doc.data())
                 })
-                console.log(temp[0])
                 setUD(temp[0])
-                console.log(temp[0].profileUrl)
             }catch(err){
                 console.log("error: ",err)
             }

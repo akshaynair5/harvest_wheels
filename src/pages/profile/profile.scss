@@ -1,86 +1,273 @@
 .profile{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll;
+    padding-bottom: 15vh;
+
+    .popUp{
+        position: fixed;
+        top: 0;
+        z-index: 6;
+        height: 100vh;
+        width: 100vw;
+        background-color: rgba(0, 0, 0, 0.468);
 
 
-    .loadLinks{
-        height: 70vh;
-        top: 25vh;
-        padding: 5vh;
-        // background-color: black;
-        width: 100%;
-        overflow-y: scroll;
-
-        .request{
-            display: flex;
-            height: 20vh;
-            width: 90%;
-            margin-left: 3%;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        .content{
+            height: 70vh;
+            width: 60vw;
+            background-color: white;
+            position: absolute;
+            left: 20vw;
+            top: 15vh;
             border-radius: 15px;
-            .userInfo{
-                padding: 2%;
-                width: 6%;
-                .name{
-                    height: 2vh;
-                    margin-top: -1vh;
-                    margin-bottom: 1vh;
-                    width: 90%;
-                    margin-left: 5%;
-                    text-align: center;
-                    font-size: 2.3vh;
-                }
-                img{
-                    height: 10vh;
-                    border-radius: 15px;
-                    margin-left: 5%;
-                    margin-top: 1vh;
-                    width: 90%;
-                }
+            padding: 2vh;
+            padding-top: 4vh;
+
+            display: flex;
+            flex-direction: column;
+
+
+            .cancel{
+                position: absolute;
+                left: 59vw;
+                background-color: transparent;
+                border: none;
+                cursor: pointer;
             }
-            .travelInfo{
-                width: 20%;
-                height: 100%;
-                padding-top: 2.5%;
-                .line{
-                    position: absolute;
-                    left: 13.15vw;
-                    margin-top: 3vh;
-                    height: 7%;
-                }
-                .info{
-                    display: flex;
-                    width: 100%;
-                    img{
-                        height: 3vh;
-                        margin-right: 10%;
-                        margin-top: 3%;
-                    }
-                    p{
-                        margin-top: 0.8%;
-                        font-size: 3vh;
+
+            input{
+                padding: 1vh;
+                margin: 2vh;
+                border-style: solid;
+                border-bottom-width: 2px;
+                border-bottom: #08A318;
+                border-top: none;
+                border-left: none;
+                border-right: none;
+            }
+            textarea{
+                height: 10vh;
+                margin: 2vh;
+            }
+
+            .submit{
+                background-color: green;
+                color: white;
+                width: 30%;
+                margin-left: 35%;
+                padding: 2vh;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            
+        }
+    }
+
+    .topBar{
+        .info{
+            width: 20vw;
+            min-height: 40vh;
+            height: max-content;
+            margin-left: 40vw;
+            // background-color: #08A318;
+
+            .profilePic{
+                width: 55%;
+                height: 90%;
+                border-radius: 15px;
+                margin-left: 22.5%;
+            }
+            p{
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        .Add{
+            position: absolute;
+            left: 75%;
+            width: 10vw;
+            background-color: green;
+            border: none;
+            border-radius: 15px;
+            padding: 2vh;
+            color: aliceblue;
+            top:32vh;
+            cursor: pointer;
+        }
+
+        .map{
+            width: 80vw;
+            height: 45vh;
+            margin-left: 10vw;
+            margin-top: 5vh;
+            background-color: gray;
+            border-radius: 10px;
+        }
+    }
+
+    .main{
+        width: 90vw;
+        margin-top: 15vh;
+        border-radius: 15px;
+        margin-left: 5vw;
+        height: 80vh;
+        border: none;
+        // background-color: black;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+        .loadLinks{
+            height: 70vh;
+            top: 25vh;
+            padding: 5vh;
+            // background-color: black;
+            width: 100%;
+            overflow-y: scroll;
+
+           .ll {
+                height: max-content;
+                width: 90%;
+                margin-left: 5%;
+                // background-color: #08A318;
+
+                .comments{
+                    width: 85%;
+                    margin-left: 5.5%;
+                    // background-color: #08A318;
+                    padding: 2%;
+                    margin-top: 3%;
+
+                    .comment{
+                        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+                        height: 10vh;
+                        border-radius: 10px;
+                        padding: 1%;
+                        margin-top: 2vh;
+                        display: flex;
+
+                        .userInfo{
+                            padding: 2%;
+                            width: 6%;
+                            .name{
+                                height: 2vh;
+                                margin-top: -2.5vh;
+                                margin-bottom: 1vh;
+                                width: 90%;
+                                margin-left: 5%;
+                                text-align: center;
+                                font-size: 1.3vh;
+                            }
+                            img{
+                                height: 6vh;
+                                border-radius: 10px;
+                                margin-left: 5%;
+                                margin-top: 0vh;
+                                width: 90%;
+                            }
+                        }
+                        .price{
+                            margin-left: 20%;
+                            background-color: #08A318;
+                            border-radius: 10px;
+                            text-align: center;
+                            padding-top: 2%;
+                            height: 70%;
+                            width: 20%;
+                            color: white;
+
+                        }
+                        .btns{
+                            width: 15%;
+                            height: 100%;
+                            margin-left: 35%;
+
+                            img{
+                                width: 45%;
+                                height: 80%;
+                                margin-top: 5%;
+                                cursor: pointer;
+                            }
+                        }
 
                     }
                 }
-            }
-            .map{
-                width: 30%;
-                background-color: darkgray;
-                height: 16vh;
-                margin-top: 2vh;
-                border-radius: 15px;
-            }
-            .Details{
-                width: 20%;
-                margin-left: 20%;
-                .bookBtn{
-                    color: white;
-                    background-color: #08A318;
-                    border: none;
-                    height: 6vh;
+                .request{
+                    display: flex;
+                    height: 20vh;
+                    width: 100%;
+                    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
                     border-radius: 15px;
-                    cursor: pointer;
-                    width: 50%;
+                    .userInfo{
+                        padding: 2%;
+                        width: 6%;
+                        .name{
+                            height: 2vh;
+                            margin-top: -1vh;
+                            margin-bottom: 1vh;
+                            width: 90%;
+                            margin-left: 5%;
+                            text-align: center;
+                            font-size: 2.3vh;
+                        }
+                        img{
+                            height: 10vh;
+                            border-radius: 15px;
+                            margin-left: 5%;
+                            margin-top: 1vh;
+                            width: 90%;
+                        }
+                    }
+                    .travelInfo{
+                        width: 20%;
+                        height: 100%;
+                        padding-top: 2.5%;
+                        .line{
+                            position: absolute;
+                            left: 19.8vw;
+                            z-index: -1;
+                            margin-top: 3vh;
+                            height: 7%;
+                        }
+                        .info{
+                            display: flex;
+                            width: 100%;
+                            img{
+                                height: 3vh;
+                                margin-right: 10%;
+                                margin-top: 3%;
+                            }
+                            p{
+                                margin-top: 0.8%;
+                                font-size: 3vh;
+
+                            }
+                        }
+                    }
+                    .map{
+                        width: 30%;
+                        background-color: darkgray;
+                        height: 16vh;
+                        margin-top: 2vh;
+                        border-radius: 15px;
+                    }
+                    .Details{
+                        width: 20%;
+                        margin-left: 20%;
+                        .bookBtn{
+                            color: white;
+                            background-color: #08A318;
+                            border: none;
+                            height: 6vh;
+                            border-radius: 15px;
+                            cursor: pointer;
+                            width: 50%;
+                        }
+                    }
                 }
-            }
+           }
         }
     }
 }
