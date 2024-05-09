@@ -27,7 +27,7 @@ function Login(){
                 <input type="password" placeholder="Password"></input>
                 <input type="submit" id="S"></input>
                 {err && <span style={{alignSelf:'center'}}><b>Username or Password is wrong, Try Again!</b></span>}
-                <p style={{width:'34%'}}>Do not have an Account?<b><Link style={{marginLeft:'2%',textDecoration:'none'}} to="/Android-Club-Task/">Register Now</Link></b></p>
+                <p style={{width:'34%'}}>Do not have an Account?<b><Link style={{marginLeft:'2%',textDecoration:'none'}} to="/Harvest_Wheels/">Register Now</Link></b></p>
             </form>
         </div>
     )

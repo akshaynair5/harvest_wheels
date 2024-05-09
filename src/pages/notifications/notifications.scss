@@ -1,0 +1,188 @@
+@media only screen and (max-width:768px){
+    .notifications{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        .n{
+            position: absolute;
+            height: 70vh;
+            top: 10vh;
+            padding: 2vw;
+            // background-color: black;
+            width: 90vw;
+            left:3vw;
+            overflow-y: scroll;
+            // background-color: black;
+
+            // .comments{
+            //     width: 85%;
+            //     margin-left: 5.5%;
+            //     // background-color: #08A318;
+            //     padding: 2%;
+            //     margin-top: 3%;
+
+                .notification{
+                    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+                    height: 10vh;
+                    border-radius: 10px;
+                    padding: 1%;
+                    margin-top: 2vh;
+                    display: flex;
+
+                    .userInfo{
+                        padding: 2%;
+                        width: 20%;
+                        .name{
+                            height: 2vh;
+                            margin-top: -0.8vh;
+                            margin-bottom: 1vh;
+                            width: 90%;
+                            margin-left: 5%;
+                            text-align: center;
+                            font-size: 1.3vh;
+                        }
+                        img{
+                            height: 6vh;
+                            border-radius: 10px;
+                            margin-left: 5%;
+                            margin-top: 0vh;
+                            width: 90%;
+                        }
+                    }
+                    .price{
+                        margin-left: 5%;
+                        background-color: #08A318;
+                        border-radius: 10px;
+                        text-align: center;
+                        padding-top: 2%;
+                        height: 70%;
+                        width: 30%;
+                        color: white;
+                        font-size: 15px;
+                        margin-top: 10px;
+                        padding: 2%;
+                        height: 60%;
+                        margin-top: 4%;
+
+
+                    }
+                    .btns{
+                        width: 35%;
+                        height: 100%;
+                        margin-left: 5%;
+                        display: flex;
+                        margin-top: 2.5%;
+
+                        img{
+                            width: 45%;
+                            height: 80%;
+                            margin-top: 5%;
+                            cursor: pointer;
+                        }
+                    }
+
+                }
+    
+            }
+        .n::-webkit-scrollbar {
+            width: 5px;
+          }
+          
+          /* Track */
+        .n::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          
+          /* Handle */
+        .n::-webkit-scrollbar-thumb {
+            background: green;
+          }
+    }
+}
+
+@media only screen and (min-width:768px){
+    .notifications{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        .n{
+            position: absolute;
+            height: 70vh;
+            top: 25vh;
+            padding: 5vh;
+            // background-color: black;
+            width: 80vw;
+            left:10vw;
+            overflow-y: scroll;
+    
+            .notification{
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+                height: 10vh;
+                border-radius: 10px;
+                padding: 1%;
+                margin-top: 2vh;
+                display: flex;
+                width: 90%;
+        
+                .userInfo{
+                    padding: 2%;
+                    width: 6%;
+                    .name{
+                        height: 2vh;
+                        margin-top: -2.5vh;
+                        margin-bottom: 1vh;
+                        width: 90%;
+                        margin-left: 5%;
+                        text-align: center;
+                        font-size: 1.3vh;
+                    }
+                    img{
+                        height: 6vh;
+                        border-radius: 10px;
+                        margin-left: 5%;
+                        margin-top: 0vh;
+                        width: 90%;
+                    }
+                }
+                .price{
+                    margin-left: 20%;
+                    background-color: #08A318;
+                    border-radius: 10px;
+                    text-align: center;
+                    padding-top: 2%;
+                    height: 70%;
+                    width: 20%;
+                    color: white;
+        
+                }
+                .btns{
+                    width: 15%;
+                    height: 100%;
+                    margin-left: 35%;
+        
+                    img{
+                        width: 45%;
+                        height: 80%;
+                        margin-top: 5%;
+                        cursor: pointer;
+                    }
+                }
+        
+            }
+    
+        }
+        .n::-webkit-scrollbar {
+            width: 5px;
+          }
+          
+          /* Track */
+        .n::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          
+          /* Handle */
+        .n::-webkit-scrollbar-thumb {
+            background: green;
+          }
+    }
+}

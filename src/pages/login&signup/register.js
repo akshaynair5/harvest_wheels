@@ -40,6 +40,8 @@ function Register (){
                                     job:job,
                                     placeOfResidence:POR,
                                     links:[],
+                                    currentTrip:"",
+                                    notifications:[]
                                     // date:storageRef
                                 });
                             }

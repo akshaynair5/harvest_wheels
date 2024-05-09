@@ -19,6 +19,7 @@ function Sidebar(){
     const {currentUser} = useContext(Authcontext)
     const [sidebarView,setSidebarView] = useState(false);
     const [userData,setUD] = useState({});
+    const [vis,setVis] = useState(false);
 
     useEffect(()=>{
         const getUserDetails = async ()=>{
@@ -43,8 +44,14 @@ function Sidebar(){
             <div className='topNav'>
                 <button onClick={()=>{setSidebarView(true)}} className='btn'><img src={btn}></img></button>
                 <img src={title} className='title'></img>
-                <img src={userData.profileUrl} className='profilePhoto' onClick={()=>{signOut(auth)}}></img>
+                <img src={userData.profileUrl} className='profilePhoto' onClick={()=>{setVis(true)}}></img>
             </div>
+            {
+                vis && 
+                <div className='logout'>
+                    <button onClick={()=>{signOut(auth)}}>Sign Out</button>
+                </div>
+            }
             {
                 sidebarView && 
                 <div className='outer' onClick={()=>{setSidebarView(false)}}>
@@ -66,7 +73,6 @@ function Sidebar(){
                             <Link to='/Profile'><img src={profile}></img></Link>
                             <p>Profile</p>
                         </div>
-                        <button className='logout' onClick={()=>{signOut(auth)}}><img src={logout}></img></button>
                     </div>
                 </div>
             }

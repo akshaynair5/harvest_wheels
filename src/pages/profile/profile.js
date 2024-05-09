@@ -12,6 +12,7 @@ import tick from '../../images/Checkmark.svg'
 import cross from '../../images/cross.svg'
 import data from '../../in.json'
 import 'mapbox-gl/dist/mapbox-gl.css';
+const token = process.env.API_ACCESS_TOKEN;
 
 function Profile(){
     const {currentUser} = useContext(Authcontext)
@@ -20,6 +21,7 @@ function Profile(){
     const [userLinks,setUL] = useState([]);
     const userRef = collection(db,"users");
     const userRef2 = collection(db,"loadLinks");
+    const [windowWidth,setWindowWidth] = useState(window.innerWidth)
 
     const [type,setType] = useState('posting');
     const [from,setFrom] = useState('')
@@ -63,7 +65,7 @@ function Profile(){
     },[])
 
     useEffect(()=>{
-        if(userData){
+        if(userData && userData.job){
             const FetchUserData = async()=>{
                 const q=query(userRef2,where("userId","==",`${currentUser.uid}`))
                 const querySnapShot1 = await getDocs(q)
@@ -98,21 +100,23 @@ function Profile(){
             }
             FetchUserData();
 
-            const FetchCurrentTrip = async()=>{
-                const q=query(userRef2,where("time","==",userData.currentTrip))
-                const querySnapShot1 = await getDocs(q)
-                const temp = [];
-                try{
-                    querySnapShot1.forEach((doc)=>{
-                        temp.push(doc.data())
-                    })
-                    setCT(temp[0])
-                    console.log(temp)
-                }catch(err){
-                    console.log("error: ",err)
+            if(userData.currentTrip != 0){
+                const FetchCurrentTrip = async()=>{
+                    const q=query(userRef2,where("time","==",userData.currentTrip))
+                    const querySnapShot1 = await getDocs(q)
+                    const temp = [];
+                    try{
+                        querySnapShot1.forEach((doc)=>{
+                            temp.push(doc.data())
+                        })
+                        setCJ(temp[0])
+                        console.log(temp)
+                    }catch(err){
+                        console.log("error: ",err)
+                    }
                 }
+                FetchCurrentTrip();
             }
-            FetchCurrentTrip();
         }
     },[userData])
 
@@ -135,11 +139,30 @@ function Profile(){
                 c = data[i];
             }
         }
-        await fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${c.lat}%2C${c.lng}%3B${d.lat}%2C${d.lng}?alternatives=true&annotations=duration&geometries=geojson&language=en&overview=full&steps=true&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w`)
-            .then((data)=>{
-                console.log(data);
-            })
+        let dist = 0;
+        let dur = 0;
+        await fetch(`https://api.distancematrix.ai/maps/api/distancematrix/json?origins=${c.lat},${c.lng}&destinations=${d.lat},${d.lng}&key=gZtZBs3OWT1f396HKrrqN8lNFMCAKqsTFlQHqQEEsXlnyJ9mrNWt3Pvdkc6msybo`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log(data); 
+          dist = data.rows[0].elements[0].distance.value / 1000;
+          dur = data.rows[0].elements[0].duration.value / (60 * 60);
+          console.log(dur);
+        })
+        .catch(error => {
+          console.error('There was a problem with the fetch operation:', error);
+        });
+        const distanceFactor = 0.1;
+        const durationFactor = 20;
 
+        const price =  (distanceFactor * dist + durationFactor * dur);
+        
+        
         await setDoc(doc(db, "loadLinks", currentUser.uid+now), {
             userId:`${currentUser.uid}`,
             profileURL:`${userData.profileUrl}`,
@@ -151,7 +174,7 @@ function Profile(){
             details:`${desc}`,
             spaceLeft:`${space}`,
             expiry:false,
-            price:15,
+            price: price ,
             comments:[],
             time:now,
             currentPos:{lat:d.lat,lon:d.lng}
@@ -186,6 +209,10 @@ function Profile(){
         });
     }
 
+    useEffect(()=>{
+        console.log(currentJourney);
+    },[currentJourney])
+
 
 
     return(
@@ -219,10 +246,10 @@ function Profile(){
                 <button onClick={()=>{addInitializer()}} className='Add'>New Tweet +</button>
 
                 <div className='map'>
-                    {/* {
-                        currentTrip && currentTrip.currentPos && 
-                        <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentTrip.currentPos.lat}/${currentTrip.currentPos.lon}`} title="Streets"></iframe>
-                    } */}
+                    {
+                        currentJourney && currentJourney.currentPos && 
+                        <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
+                    }
                 </div>
 
 
@@ -231,9 +258,104 @@ function Profile(){
 
             <div className='main'>
                 <div className='loadLinks'>
-                    {userLinks.length > 0 && 
+                    {userLinks.length > 0 && windowWidth < 768 && 
                         userLinks.map((loadLink)=>{
                             if(loadLink.type == 'posting'){
+                                let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
+                                return(
+                                    <div className='ll' onClick={()=>{setCC(loadLink.time)}}>
+                                        <div className='request'>
+                                        <div className='r1'>
+                                            <div className='userInfo'>
+                                                <p className='name'>{loadLink.name}</p>
+                                                <img src={loadLink.profileURL}></img>
+                                            </div>
+                                            <div className='travelInfo'>
+                                                <img src={line} className='line'></img>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.start}</p>
+                                                </div>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.destination}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='map'>
+                                            {/* <ReactMapGl
+                                                mapboxAccessToken = {TOKEN}
+                                                initailViewState={{
+                                                    longitude:28.6448,
+                                                    latitude:78.004,
+                                                    zoom:6
+                                                }}
+                                                mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
+
+                                            >
+
+                                            </ReactMapGl> */}
+
+                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            
+                                        </div>
+                                        <div className='Details'>
+                                            <p className='d1'><b>Date:</b> {loadLink.date}</p>
+                                            <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                        </div>
+                                        </div>
+                                        {
+                                            currentComment == loadLink.time && 
+                                            <div className='comments'>
+                                                {
+                                                    loadLink.comments.map((c)=>(
+                                                        <div className='comment'>
+                                                            <div className='userInfo'>
+                                                                <p className='name'>{c.name}</p>
+                                                                <img src={c.profileURL}></img>
+                                                            </div>
+                                                            <div className='price'>
+                                                                Offered Price : ₹{c.price}
+                                                            </div>
+
+                                                            <div className='btns'>
+                                                                <img src={tick} onClick={()=>{onAccept(loadLink,c)}}></img>
+                                                                <img src={cross}></img>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                )
+                            }
+                            else{
+                                return(
+                                    <div className='proposal'>
+                                        <p>Start: {loadLink.start}</p>
+                                        <p>destination: {loadLink.destination}</p>
+                                        <p>date {loadLink.date}</p>
+                                        <p>Details {loadLink.details}</p>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                    {userLinks.length > 0 && windowWidth > 768 &&
+                        userLinks.map((loadLink)=>{
+                            if(loadLink.type == 'posting'){
+                                let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
                                 return(
                                     <div className='ll' onClick={()=>{setCC(loadLink.time)}}>
                                         <div className='request'>
@@ -253,7 +375,7 @@ function Profile(){
                                                 </div>
                                             </div>
                                             <div className='map'>
-                                                
+                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
                                             </div>
                                             <div className='Details'>
                                                 <p className='d1'><b>Date:</b> {loadLink.date}</p>

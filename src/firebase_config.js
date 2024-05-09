@@ -5,11 +5,11 @@ import { getStorage, ref } from "firebase/storage";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
+const token = process.env.FIREBASE_TOKEN
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyAhBYMGGecvu9tsN-M4ytRodhs-Ns6ZCQo",
+    apiKey:"AIzaSyAhBYMGGecvu9tsN-M4ytRodhs-Ns6ZCQo",
     authDomain: "harvest-wheels.firebaseapp.com",
     projectId: "harvest-wheels",
     storageBucket: "harvest-wheels.appspot.com",

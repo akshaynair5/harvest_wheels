@@ -10,6 +10,8 @@ import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
+import Fuse from 'fuse.js'
+import data from '../../in.json'
 
 function Explore (){
 
@@ -18,6 +20,11 @@ function Explore (){
     const {currentUser} = useContext(Authcontext);
     const [userData,setUD] = useState({});
     const [allData,setAD] = useState([])
+    const [search,setSearch] = useState('');
+    const [searchRes,setSearchRes] = useState([]);
+    const [windowWidth,setWindowWidth] = useState(window.innerWidth)
+    const [space,setSpace] = useState();
+    const [currentCoords,setCoor] = useState({});
 
     const [currentView,setCurrentView] = useState({});
     const [view,setView] = useState(false);
@@ -160,13 +167,47 @@ function Explore (){
     //         })
     // }
 
-    const viewMore = (obj)=>{
+    useEffect(()=>{
+        if(search != ''){
+            console.log('content');
+            const fuseOptions = {
+                keys: ['start','destination'], // Specify the keys to search within
+                threshold: 0.4, // Set the threshold for fuzzy matching
+            };
+            const fuse = new Fuse(allData, fuseOptions);
+            const searchResults = fuse.search(`${search}`);
+            console.log(searchResults)
+            let temp = []
+            if(searchResults){
+                for(let i=0;i<searchResults.length;i++){
+                    temp = [...temp,searchResults[i].item];
+                }
+            }
+            setSearchRes(temp);
+        }
+    },[search])
+
+    const viewMore = (obj,c)=>{
         setCurrentView(obj);
         setView(true);
+        setCoor({lat:c.lat,lon:c.lng})
     }
     
-    const bookSpace = ()=>{
-        
+    const bookSpace = async ()=>{
+        console.log(currentView);
+        let temp = currentView.comments;
+        let now = new Date().getTime()
+
+
+        temp = [...temp,{uid:userData.uid,name:userData.displayName,profileURL:userData.profileUrl,space:space,price:space*currentView.price,status:false,commentId:now}];
+
+        if(userData.profileUrl){
+            console.log(temp)
+            await updateDoc(doc(db, 'loadLinks', currentView.userId+currentView.time), {
+                comments:temp
+            });
+        }
+        setView(false)
     }
 
     return (
@@ -176,17 +217,22 @@ function Explore (){
             <div className='Main'>
 
             {
-                view && 
-                <div className='currentView'>
-                    <button onClick={()=>{setView(false)}}>X</button>
+                    view && 
+                    <div className='currentView'>
+                        <button onClick={()=>{setView(false)}}>X</button>
                         <div className='viewContent'>
-                            <div className='map'>
-                            </div>
+                            {
+                                
+                                <div className='map'>
+                                    <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe>
+                                </div>
+                            }
 
                             <p className='desc'>
-                                <p className='Title'>Description</p>
-                                <p>{currentView.details}</p>
+                                <p className='Title'><b>Description</b></p>
+                                <p className='content'>{currentView.details}</p>
                             </p>
+                            <p className='Title'><b>Trip Info</b></p>
                             <div className='info'>
                                 <img src={pointer}></img>
                                 <p>Start: {currentView.start}</p>
@@ -195,21 +241,91 @@ function Explore (){
                                 <img src={pointer}></img>
                                 <p>Destination: {currentView.destination}</p>
                             </div>
+                            <p className='Title'><b>Space Needed</b></p>
+                            <div className='space'>
+                                <p className='sn'>{space?space:0}</p>
+                                <input
+                                    type="range"
+                                    min={0}
+                                    max={currentView.spaceLeft}
+                                    onChange={(e)=>{setSpace(e.target.value)}}
+                                />
+                                <p>{currentView.spaceLeft} m/s^2</p>
+                            </div>
 
-                            <input
-                                type="range"
-                                min={0}
-                                max={currentView.spaceLeft}
-                            />
-
-                            <button onClick={()=>{bookSpace()}}>Book Now</button>
+                            <input type='button' className='btn' onClick={()=>{bookSpace()}} placeholder='book' value='Book'></input>
                         </div>
                     </div>
-                }
+                } 
 
                 <div className='loadLinks'>
-                    {allData.length > 0 && 
+                    <div className='sr'>
+                        <input className='search' type='text' placeholder='Search' onChange={(e)=>{setSearch(e.target.value)}}></input>
+                    </div>
+                    {allData.length > 0 && search == '' && windowWidth > 768 && 
                         allData.map((loadLink)=>{
+                            if(loadLink.type == 'posting'){
+                                let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
+                                return(
+                                    <div className='request'>
+                                        {
+                                            view2 && currentFriend.userId == loadLink.userId && currentFriend.id == loadLink.time &&
+                                                <div className='friendReq'>
+                                                    <button onClick={()=>{sendRequest()}}>Send Link Request</button>
+                                                    <button onClick={()=>{setCurrentFriend({})}}>Close</button>
+                                                </div>
+                                        }  
+                                        <div className='userInfo' onClick={()=>{sendRequestIntiator({userId:loadLink.userId,id:loadLink.time})}}>
+                                            <p className='name'>{loadLink.name}</p>
+                                            <img src={loadLink.profileURL}></img>
+                                        </div>
+                                        <div className='travelInfo'>
+                                            <img src={line} className='line'></img>
+                                            <div className='info'>
+                                                <img src={pointer}></img>
+                                                <p>{loadLink.start}</p>
+                                            </div>
+                                            <div className='info'>
+                                                <img src={pointer}></img>
+                                                <p>{loadLink.destination}</p>
+                                            </div>
+                                        </div>
+                                        <div className='map'>
+                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                        </div>
+                                        <div className='Details'>
+                                            <p className='d1'><b>Date:</b> {loadLink.date}</p>
+                                            <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                            <button className='bookBtn' onClick={()=>{viewMore(loadLink,obj)}}>Book Now:  ₹{loadLink.price}</button>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            else{
+                                return(
+                                    <div className='proposal'>
+                                        <p>Start: {loadLink.start}</p>
+                                        <p>destination: {loadLink.destination}</p>
+                                        <p>date {loadLink.date}</p>
+                                        <p>Details {loadLink.details}</p>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                    {searchRes.length > 0 && search != '' && windowWidth > 768 && 
+                        searchRes.map((loadLink)=>{
+                            let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
                             if(loadLink.type == 'posting'){
                                 return(
                                     <div className='request'>
@@ -236,13 +352,157 @@ function Explore (){
                                             </div>
                                         </div>
                                         <div className='map'>
-                                            
+                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
                                         </div>
                                         <div className='Details'>
                                             <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                             <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
                                             <button className='bookBtn' onClick={()=>{viewMore(loadLink)}}>Book Now:  ₹{loadLink.price}</button>
                                         </div>
+                                    </div>
+                                )
+                            }
+                            else{
+                                return(
+                                    <div className='proposal'>
+                                        <p>Start: {loadLink.start}</p>
+                                        <p>destination: {loadLink.destination}</p>
+                                        <p>date {loadLink.date}</p>
+                                        <p>Details {loadLink.details}</p>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                    {allData.length > 0 && search == '' && windowWidth < 768 && 
+                        allData.map((loadLink)=>{
+                            if(loadLink.type == 'posting'){
+                                let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
+                                return(
+                                    <div className='request'>
+                                        {
+                                            view2 && currentFriend.userId == loadLink.userId && currentFriend.id == loadLink.time &&
+                                                <div className='friendReq'>
+                                                    <button onClick={()=>{sendRequest()}}>Send Link Request</button>
+                                                    <button onClick={()=>{setCurrentFriend({})}}>Close</button>
+                                                </div>
+                                        }  
+                                        <div className='r1'>
+                                            <div className='userInfo' onClick={()=>{sendRequestIntiator({userId:loadLink.userId,id:loadLink.time})}}>
+                                                <p className='name'>{loadLink.name}</p>
+                                                <img src={loadLink.profileURL}></img>
+                                            </div>
+                                            <div className='travelInfo'>
+                                                <img src={line} className='line'></img>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.start}</p>
+                                                </div>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.destination}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='map'>
+                                            {/* <ReactMapGl
+                                                mapboxAccessToken = {TOKEN}
+                                                initailViewState={{
+                                                    longitude:28.6448,
+                                                    latitude:78.004,
+                                                    zoom:6
+                                                }}
+                                                mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
+
+                                            >
+
+                                            </ReactMapGl> */}
+
+                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            
+                                        </div>
+                                        <div className='Details'>
+                                            <p className='d1'><b>Date:</b> {loadLink.date}</p>
+                                            <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                        </div>
+                                        <button className='bookBtn' onClick={()=>{viewMore(loadLink,obj)}}>Book Now:  ₹{loadLink.price}</button>
+                                    </div>
+                                )
+                            }
+                            else{
+                                return(
+                                    <div className='proposal'>
+                                        <p>Start: {loadLink.start}</p>
+                                        <p>destination: {loadLink.destination}</p>
+                                        <p>date {loadLink.date}</p>
+                                        <p>Details {loadLink.details}</p>
+                                    </div>
+                                )
+                            }
+                        })
+                    }
+                    {searchRes.length > 0 && search != '' && windowWidth < 768 && 
+                        searchRes.map((loadLink)=>{
+                            let obj
+                                for(let i=0;i<data.length;i++){
+                                    if(data[i].city == `${loadLink.destination}`){
+                                        obj = data[i];
+                                    }
+                                }
+                            if(loadLink.type == 'posting'){
+                                return(
+                                    <div className='request'>
+                                        {
+                                            view2 && currentFriend.userId == loadLink.userId && currentFriend.id == loadLink.time &&
+                                                <div className='friendReq'>
+                                                    <button onClick={()=>{sendRequest()}}>Send Link Request</button>
+                                                    <button onClick={()=>{setCurrentFriend({})}}>Close</button>
+                                                </div>
+                                        }  
+                                        <div className='r1'>
+                                            <div className='userInfo' onClick={()=>{sendRequestIntiator({userId:loadLink.userId,id:loadLink.time})}}>
+                                                <p className='name'>{loadLink.name}</p>
+                                                <img src={loadLink.profileURL}></img>
+                                            </div>
+                                            <div className='travelInfo'>
+                                                <img src={line} className='line'></img>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.start}</p>
+                                                </div>
+                                                <div className='info'>
+                                                    <img src={pointer}></img>
+                                                    <p>{loadLink.destination}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='map'>
+                                            {/* <ReactMapGl
+                                                mapboxAccessToken = {TOKEN}
+                                                initailViewState={{
+                                                    longitude:28.6448,
+                                                    latitude:78.004,
+                                                    zoom:6
+                                                }}
+                                                mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
+
+                                            >
+
+                                            </ReactMapGl> */}
+
+                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            
+                                        </div>
+                                        <div className='Details'>
+                                            <p className='d1'><b>Date:</b> {loadLink.date}</p>
+                                            <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                        </div>
+                                        <button className='bookBtn' onClick={()=>{viewMore(loadLink,obj)}}>Book Now:  ₹{loadLink.price}</button>    
                                     </div>
                                 )
                             }

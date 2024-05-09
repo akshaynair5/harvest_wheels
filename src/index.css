@@ -1,3 +1,17 @@
+body::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+body::-webkit-scrollbar-thumb {
+  background: green;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

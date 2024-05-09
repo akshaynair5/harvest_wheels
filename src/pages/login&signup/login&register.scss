@@ -67,3 +67,127 @@
     transition: 0.3s;
   }
   
+  @media only screen and (min-width:400px) and (max-width:720px){
+    .FormBox{
+      left:15%;
+      top:14%;
+      width:70%;
+      padding: 2%;
+    }
+    .FormBox form input{
+      margin:7%;
+      padding: 2%;
+    }
+    .FormBox form label{
+      margin:3%;
+      padding: 1%;
+  
+    }
+    .FormBox form #S{
+      width:55%;
+      padding: 4%;
+      background-color: #282c34;
+      color: aliceblue;
+      border-radius: 25px;
+    }
+    .profileBox{
+      top:50%;
+      width: 80%;
+      left: 15%;
+      right: 15%;
+      display:table;
+      flex-direction: row;
+      min-height: 60%;
+    }
+    .profileBox .Info{
+      left:15%;
+      top:30%;
+    }
+    .profileBox button{
+      left:15%;
+      top:76%;
+      height: 13%;
+      width: fit-content;
+      padding: 2%;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    .profileBox img{
+      width:150px;
+      height: 140px;
+      left: 20%;
+    }
+  }
+  @media only screen and (max-width:400px){
+    .FormBox{
+      left:12%;
+      top:14%;
+      width:70%;
+      padding: 2%;
+    }
+    .FormBox form input{
+      margin:7%;
+      padding: 2%;
+    }
+    .FormBox form label{
+      margin:3%;
+      padding: 1%;
+  
+    }
+    .FormBox form #S{
+      
+      width:55%;
+      padding: 4%;
+      background-color: #282c34;
+      color: aliceblue;
+      border-radius: 25px;
+    }
+    .profileBox{
+      top:50%;
+      width: 80%;
+      left: 15%;
+      right: 15%;
+      display:table;
+      flex-direction: row;
+      min-height: 70%;
+    }
+    .profileBox .Info{
+      left:15%;
+      top:30%;
+    }
+    .profileBox button{
+      left:15%;
+      top:76%;
+      height: 13%;
+      width: fit-content;
+      padding: 2%;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
+    .profileBox img{
+      width:130px;
+      height: 120px;
+      left: 20%;
+    }
+  }
+  @media only screen and (min-width:720px) and (max-width:850px) {
+    .profileBox{
+      top:50%;
+      width: 70%;
+      left: 15%;
+    }
+  }
+  
+  @media only screen and (max-height:600px) {
+    .profileBox{
+      top:30%;
+      height: 60%;
+      width: 85%;
+      left:5%;
+    }
+    .home .heading{
+      font-size: 50px;
+      position: absolute;
+      top:-5%;
+    }
+  }

@@ -1,138 +1,242 @@
-.profile{
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    overflow-y: scroll;
-    padding-bottom: 15vh;
-
-    .popUp{
+@media only screen and (max-width:768px){
+    .profile{
         position: fixed;
-        top: 0;
-        z-index: 6;
-        height: 100vh;
         width: 100vw;
-        background-color: rgba(0, 0, 0, 0.468);
-
-
-        .content{
-            height: 70vh;
-            width: 60vw;
-            background-color: white;
-            position: absolute;
-            left: 20vw;
-            top: 15vh;
-            border-radius: 15px;
-            padding: 2vh;
-            padding-top: 4vh;
-
-            display: flex;
-            flex-direction: column;
-
-
-            .cancel{
+        height: 100vh;
+        overflow-y: scroll;
+        padding-bottom: 15vh;
+        overflow-x: hidden;
+    
+        .popUp{
+            position: fixed;
+            top: 0;
+            z-index: 6;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(0, 0, 0, 0.468);
+    
+    
+            .content{
+                height: 70vh;
+                width: 82vw;
+                background-color: white;
                 position: absolute;
-                left: 59vw;
-                background-color: transparent;
-                border: none;
-                cursor: pointer;
-            }
-
-            input{
-                padding: 1vh;
-                margin: 2vh;
-                border-style: solid;
-                border-bottom-width: 2px;
-                border-bottom: #08A318;
-                border-top: none;
-                border-left: none;
-                border-right: none;
-            }
-            textarea{
-                height: 10vh;
-                margin: 2vh;
-            }
-
-            .submit{
-                background-color: green;
-                color: white;
-                width: 30%;
-                margin-left: 35%;
-                padding: 2vh;
-                border: none;
-                border-radius: 10px;
-                cursor: pointer;
-            }
-            
-        }
-    }
-
-    .topBar{
-        .info{
-            width: 20vw;
-            min-height: 40vh;
-            height: max-content;
-            margin-left: 40vw;
-            // background-color: #08A318;
-
-            .profilePic{
-                width: 55%;
-                height: 90%;
+                left: 5vw;
+                top: 15vh;
                 border-radius: 15px;
-                margin-left: 22.5%;
+                padding: 2vh;
+                padding-top: 4vh;
+    
+                display: flex;
+                flex-direction: column;
+    
+    
+                .cancel{
+                    position: absolute;
+                    left: 79vw;
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                }
+    
+                input{
+                    padding: 1vh;
+                    margin: 2vh;
+                    border-style: solid;
+                    border-bottom-width: 2px;
+                    border-bottom: #08A318;
+                    border-top: none;
+                    border-left: none;
+                    border-right: none;
+                }
+                textarea{
+                    height: 10vh;
+                    margin: 2vh;
+                }
+    
+                .submit{
+                    background-color: green;
+                    color: white;
+                    width: 60%;
+                    margin-left: 20%;
+                    padding: 2vh;
+                    border: none;
+                    border-radius: 10px;
+                    cursor: pointer;
+                }
+                
             }
-            p{
-                width: 100%;
-                text-align: center;
-            }
         }
-
-        .Add{
-            position: absolute;
-            left: 75%;
-            width: 10vw;
-            background-color: green;
-            border: none;
-            border-radius: 15px;
-            padding: 2vh;
-            color: aliceblue;
-            top:32vh;
-            cursor: pointer;
-        }
-
-        .map{
-            width: 80vw;
-            height: 45vh;
-            margin-left: 10vw;
-            margin-top: 5vh;
-            background-color: gray;
-            border-radius: 10px;
-        }
-    }
-
-    .main{
-        width: 90vw;
-        margin-top: 15vh;
-        border-radius: 15px;
-        margin-left: 5vw;
-        height: 80vh;
-        border: none;
-        // background-color: black;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
-
-        .loadLinks{
-            height: 70vh;
-            top: 25vh;
-            padding: 5vh;
-            // background-color: black;
-            width: 100%;
-            overflow-y: scroll;
-
-           .ll {
+    
+        .topBar{
+            .info{
+                width: 50vw;
+                min-height: 40vh;
                 height: max-content;
-                width: 90%;
-                margin-left: 5%;
+                margin-left: 25vw;
+                margin-top: 10vh;
                 // background-color: #08A318;
-
+    
+                .profilePic{
+                    width: 55%;
+                    height: 100%;
+                    border-radius: 15px;
+                    margin-left: 22.5%;
+                }
+                p{
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+    
+            .Add{
+                position: absolute;
+                left: 9.5vw;
+                width: 81vw;
+                background-color: green;
+                border: none;
+                border-radius: 15px;
+                padding: 2vh;
+                color: aliceblue;
+                top:48vh;
+                cursor: pointer;
+            }
+    
+            .map{
+                width: 80vw;
+                height: 30vh;
+                margin-left: 10vw;
+                // margin-top: 0vh;
+                background-color: gray;
+                border-radius: 10px;
+            }
+        }
+    
+        .main{
+            width: 90vw;
+            margin-top: 5vh;
+            border-radius: 15px;
+            margin-left: 5vw;
+            padding-top: 4%;
+            height: 80vh;
+            border: none;
+            // background-color: black;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    
+            .currentView{
+                position: fixed;
+                height: 100vh;
+                width:100vw;
+                background-color: rgba(0, 0, 0, 0.535);
+                top: 0vh;
+                left: 0vh;
+                z-index: 7;
+    
+                .viewContent{
+                    height: 80vh;
+                    position: absolute;
+                    width: 74vw;
+                    left: 5vw;
+                    top:10vh;
+                    background-color: aliceblue;
+                    border-radius: 15px;
+                    padding: 8vw;
+                    overflow-y: scroll;
+                    display: flex;
+                    flex-direction: column;
+    
+                    .map{
+                        width: 80%;
+                        min-height: 30%;
+                        background-color: grey;
+                        margin-left: 10%;
+                        margin-top: 5%;
+                        border-radius: 10px;
+                    }
+                    .space{
+                        display: flex;
+                        input{
+                            margin-left: 2.5%;
+                            margin-right: 2.5%;
+                            width:80%;
+                        }
+                    }
+    
+                    .desc{
+                        margin-top: 2vh;
+                        .Title{
+                            font-size: 3vh;
+                        }
+                        .content{
+                            margin-left: 5%;
+                        }
+                    }
+    
+                    .Title{
+                        font-size: 3vh;
+                    } 
+                    .info{
+                        display: flex;
+                        width: 100%;
+                        // background-color: #08A318;
+                        img{
+                            height: 3vh;
+                            margin-right: 5%;
+                            // margin-top: 3%;
+                        }
+                        p{
+                            margin-top: 0.2%;
+                            font-size: 2vh;
+    
+                        }
+                    }
+    
+                    .btn{
+                        background-color: #08A318;
+                        border: none;
+                        color: white;
+                        padding: 4%;
+                        font-size: 3vh;
+                        width:60%;
+                        margin-left: 20%;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        margin-bottom: 5vh;
+                        margin-top: 5vh;
+    
+    
+                    }
+                }
+                .viewContent::-webkit-scrollbar {
+                    width: 5px;
+                  }
+                  
+                  /* Track */
+                .viewContent::-webkit-scrollbar-track {
+                    background: transparent;
+                  }
+                  
+                  /* Handle */
+                .viewContent::-webkit-scrollbar-thumb {
+                    background: green;
+                  }
+            }
+    
+            .bg{
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                z-index: 0;
+                opacity: 0.15;
+            }
+        
+            .loadLinks{
+                height: 70vh;
+                top: 25vh;
+                padding: 2%;
+                background-color: transparent;
+                width: 100%;
+                overflow-y: scroll;
                 .comments{
                     width: 85%;
                     margin-left: 5.5%;
@@ -150,10 +254,10 @@
 
                         .userInfo{
                             padding: 2%;
-                            width: 6%;
+                            width: 20%;
                             .name{
                                 height: 2vh;
-                                margin-top: -2.5vh;
+                                margin-top: -0.8vh;
                                 margin-bottom: 1vh;
                                 width: 90%;
                                 margin-left: 5%;
@@ -169,20 +273,27 @@
                             }
                         }
                         .price{
-                            margin-left: 20%;
+                            margin-left: 5%;
                             background-color: #08A318;
                             border-radius: 10px;
                             text-align: center;
                             padding-top: 2%;
                             height: 70%;
-                            width: 20%;
+                            width: 30%;
                             color: white;
+                            font-size: 10px;
+                            margin-top: 10px;
+                            padding: 2%;
+                            height: 60%;
+                            margin-top: 4%;
+
 
                         }
                         .btns{
-                            width: 15%;
+                            width: 35%;
                             height: 100%;
-                            margin-left: 35%;
+                            margin-left: 5%;
+                            display: flex;
 
                             img{
                                 width: 45%;
@@ -194,80 +305,433 @@
 
                     }
                 }
+    
                 .request{
-                    display: flex;
-                    height: 20vh;
-                    width: 100%;
+                    height: 45vh;
+                    width: 90%;
+                    margin-left: 3%;
                     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
                     border-radius: 15px;
-                    .userInfo{
-                        padding: 2%;
-                        width: 6%;
-                        .name{
-                            height: 2vh;
-                            margin-top: -1vh;
-                            margin-bottom: 1vh;
-                            width: 90%;
-                            margin-left: 5%;
-                            text-align: center;
-                            font-size: 2.3vh;
-                        }
-                        img{
-                            height: 10vh;
-                            border-radius: 15px;
-                            margin-left: 5%;
-                            margin-top: 1vh;
-                            width: 90%;
-                        }
-                    }
-                    .travelInfo{
-                        width: 20%;
-                        height: 100%;
-                        padding-top: 2.5%;
-                        .line{
-                            position: absolute;
-                            left: 19.8vw;
-                            z-index: -1;
-                            margin-top: 3vh;
-                            height: 7%;
-                        }
-                        .info{
-                            display: flex;
-                            width: 100%;
-                            img{
-                                height: 3vh;
-                                margin-right: 10%;
-                                margin-top: 3%;
+                    margin-bottom: 5%;
+                    .r1{
+                        width: 100%;
+                        display: flex;
+                        padding: 4%;
+                        .userInfo{
+                            padding: 2%;
+                            width: 25%;
+                            .name{
+                                height: 2vh;
+                                margin-top: -1vh;
+                                margin-bottom: 1vh;
+                                width: 90%;
+                                margin-left: 5%;
+                                text-align: center;
+                                font-size: 2vh;
                             }
-                            p{
-                                margin-top: 0.8%;
-                                font-size: 3vh;
-
+                            img{
+                                height: 60%;
+                                border-radius: 15px;
+                                margin-left: 20%;
+                                margin-top: 1vh;
+                                width: 60%;
+                            }
+                        }
+                        .travelInfo{
+                            width: 75%;
+                            height: 100%;
+                            padding-top: 2.5%;
+                            padding-left: 15%;
+                            .line{
+                                position: absolute;
+                                left: 39.85vw;
+                                margin-top: 1.8vh;
+                                height: 5%;
+                                display: none;
+                            }
+                            .info{
+                                display: flex;
+                                width: 100%;
+                                img{
+                                    height: 2vh;
+                                    margin-right: 10%;
+                                    margin-top: 3%;
+                                }
+                                p{
+                                    margin-top: 0.8%;
+                                    font-size: 2vh;
+                                }
                             }
                         }
                     }
                     .map{
-                        width: 30%;
+                        width: 90%;
                         background-color: darkgray;
                         height: 16vh;
-                        margin-top: 2vh;
+                        margin-left: 5%;
                         border-radius: 15px;
                     }
                     .Details{
-                        width: 20%;
-                        margin-left: 20%;
-                        .bookBtn{
-                            color: white;
-                            background-color: #08A318;
-                            border: none;
-                            height: 6vh;
-                            border-radius: 15px;
-                            cursor: pointer;
-                            width: 50%;
+                        width: 100%;
+                        display: flex;
+                        .d1{
+                            width: 40%;
+                            margin-left: 5%;
+                            font-size: 1.5vh;
+                            text-align: center;
+                        }
+                        .d2{
+                            width: 40%;
+                            margin-left: 5%;
+                            font-size: 1.5vh;
+                            text-align: center;
                         }
                     }
+
+                    .bookBtn{
+                        color: white;
+                        background-color: #08A318;
+                        border: none;
+                        height: 6vh;
+                        border-radius: 10px;
+                        cursor: pointer;
+                        width: 60%;
+                        margin-left: 20%;
+                        margin-top: 2%;
+                    }
                 }
-           }
+            }
+            .loadLinks::-webkit-scrollbar {
+                width: 5px;
+              }
+              
+              /* Track */
+            .loadLinks::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              
+              /* Handle */
+            .loadLinks::-webkit-scrollbar-thumb {
+                background: green;
+              }
         }
     }
+    
+    .profile::-webkit-scrollbar {
+        width: 5px;
+      }
+      
+      /* Track */
+    .profile::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      /* Handle */
+    .profile::-webkit-scrollbar-thumb {
+        background: green;
+      }
+}
+
+
+@media only screen and (min-width:768px){
+    .profile{
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        overflow-y: scroll;
+        padding-bottom: 15vh;
+    
+        .popUp{
+            position: fixed;
+            top: 0;
+            z-index: 6;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(0, 0, 0, 0.468);
+    
+    
+            .content{
+                height: 70vh;
+                width: 60vw;
+                background-color: white;
+                position: absolute;
+                left: 20vw;
+                top: 15vh;
+                border-radius: 15px;
+                padding: 2vh;
+                padding-top: 4vh;
+    
+                display: flex;
+                flex-direction: column;
+    
+    
+                .cancel{
+                    position: absolute;
+                    left: 59vw;
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                }
+    
+                input{
+                    padding: 1vh;
+                    margin: 2vh;
+                    border-style: solid;
+                    border-bottom-width: 2px;
+                    border-bottom: #08A318;
+                    border-top: none;
+                    border-left: none;
+                    border-right: none;
+                }
+                textarea{
+                    height: 10vh;
+                    margin: 2vh;
+                }
+    
+                .submit{
+                    background-color: green;
+                    color: white;
+                    width: 30%;
+                    margin-left: 35%;
+                    padding: 2vh;
+                    border: none;
+                    border-radius: 10px;
+                    cursor: pointer;
+                }
+                
+            }
+        }
+    
+        .topBar{
+            .info{
+                width: 20vw;
+                min-height: 40vh;
+                height: max-content;
+                margin-left: 40vw;
+                // background-color: #08A318;
+    
+                .profilePic{
+                    width: 55%;
+                    height: 90%;
+                    border-radius: 15px;
+                    margin-left: 22.5%;
+                }
+                p{
+                    width: 100%;
+                    text-align: center;
+                }
+            }
+    
+            .Add{
+                position: absolute;
+                left: 75%;
+                width: 10vw;
+                background-color: green;
+                border: none;
+                border-radius: 15px;
+                padding: 2vh;
+                color: aliceblue;
+                top:32vh;
+                cursor: pointer;
+            }
+    
+            .map{
+                width: 80vw;
+                height: 45vh;
+                margin-left: 10vw;
+                margin-top: 5vh;
+                background-color: gray;
+                border-radius: 10px;
+            }
+        }
+    
+        .main{
+            width: 90vw;
+            margin-top: 15vh;
+            border-radius: 15px;
+            margin-left: 5vw;
+            height: 80vh;
+            border: none;
+            // background-color: black;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    
+            .loadLinks{
+                height: 70vh;
+                top: 25vh;
+                padding: 5vh;
+                // background-color: black;
+                width: 100%;
+                overflow-y: scroll;
+    
+               .ll {
+                    height: max-content;
+                    width: 90%;
+                    margin-left: 5%;
+                    // background-color: #08A318;
+    
+                    .comments{
+                        width: 85%;
+                        margin-left: 5.5%;
+                        // background-color: #08A318;
+                        padding: 2%;
+                        margin-top: 3%;
+    
+                        .comment{
+                            box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+                            height: 10vh;
+                            border-radius: 10px;
+                            padding: 1%;
+                            margin-top: 2vh;
+                            display: flex;
+    
+                            .userInfo{
+                                padding: 2%;
+                                width: 6%;
+                                .name{
+                                    height: 2vh;
+                                    margin-top: -2.5vh;
+                                    margin-bottom: 1vh;
+                                    width: 90%;
+                                    margin-left: 5%;
+                                    text-align: center;
+                                    font-size: 1.3vh;
+                                }
+                                img{
+                                    height: 6vh;
+                                    border-radius: 10px;
+                                    margin-left: 5%;
+                                    margin-top: 0vh;
+                                    width: 90%;
+                                }
+                            }
+                            .price{
+                                margin-left: 20%;
+                                background-color: #08A318;
+                                border-radius: 10px;
+                                text-align: center;
+                                padding-top: 2%;
+                                height: 70%;
+                                width: 20%;
+                                color: white;
+    
+                            }
+                            .btns{
+                                width: 15%;
+                                height: 100%;
+                                margin-left: 35%;
+    
+                                img{
+                                    width: 45%;
+                                    height: 80%;
+                                    margin-top: 5%;
+                                    cursor: pointer;
+                                }
+                            }
+    
+                        }
+                    }
+                    .request{
+                        display: flex;
+                        height: 20vh;
+                        width: 100%;
+                        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                        border-radius: 15px;
+                        .userInfo{
+                            padding: 2%;
+                            width: 6%;
+                            .name{
+                                height: 2vh;
+                                margin-top: -1vh;
+                                margin-bottom: 1vh;
+                                width: 90%;
+                                margin-left: 5%;
+                                text-align: center;
+                                font-size: 2.3vh;
+                            }
+                            img{
+                                height: 10vh;
+                                border-radius: 15px;
+                                margin-left: 5%;
+                                margin-top: 1vh;
+                                width: 90%;
+                            }
+                        }
+                        .travelInfo{
+                            width: 20%;
+                            height: 100%;
+                            padding-top: 2.5%;
+                            .line{
+                                position: absolute;
+                                left: 19.8vw;
+                                z-index: -1;
+                                margin-top: 3vh;
+                                height: 7%;
+                            }
+                            .info{
+                                display: flex;
+                                width: 100%;
+                                img{
+                                    height: 3vh;
+                                    margin-right: 10%;
+                                    margin-top: 3%;
+                                }
+                                p{
+                                    margin-top: 0.8%;
+                                    font-size: 3vh;
+    
+                                }
+                            }
+                        }
+                        .map{
+                            width: 30%;
+                            background-color: darkgray;
+                            height: 16vh;
+                            margin-top: 2vh;
+                            border-radius: 15px;
+                        }
+                        .Details{
+                            width: 20%;
+                            margin-left: 20%;
+                            .bookBtn{
+                                color: white;
+                                background-color: #08A318;
+                                border: none;
+                                height: 6vh;
+                                border-radius: 15px;
+                                cursor: pointer;
+                                width: 50%;
+                            }
+                        }
+                    }
+               }
+            }
+            .loadLinks::-webkit-scrollbar {
+                width: 5px;
+              }
+              
+              /* Track */
+            .loadLinks::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              
+              /* Handle */
+            .loadLinks::-webkit-scrollbar-thumb {
+                background: green;
+              }
+        }
+    }
+    
+    .profile::-webkit-scrollbar {
+        width: 5px;
+      }
+      
+      /* Track */
+    .profile::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      /* Handle */
+    .profile::-webkit-scrollbar-thumb {
+        background: green;
+      }   
 }

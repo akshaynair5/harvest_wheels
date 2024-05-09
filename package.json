@@ -1,13 +1,16 @@
 {
   "name": "harvest_wheels",
+  "homepage":"https://akshaynair5.github.io/Harvest_Wheels",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@react-google-maps/api": "^2.19.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "firebase": "^10.8.1",
+    "fuse.js": "^7.0.0",
+    "gh-pages": "^6.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
