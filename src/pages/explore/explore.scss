@@ -152,6 +152,36 @@
                     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
                     border-radius: 15px;
                     margin-bottom: 5%;
+
+                    .friendReq{
+                        background-color: white;
+                        height: 15vh;
+                        width: 30vw;
+                        padding-top: 2%;
+                        position: absolute;
+                        margin-top: -10vh;
+                        border-radius: 10px;
+                        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                        
+                        button{
+                            margin-top: 1%;
+                            width: 90%;
+                            margin-left: 5%;
+                            background-color: aliceblue;
+                            border: none;
+                            background-color: #08A318;
+                            border-radius: 5px;
+                            padding: 2%;
+                            margin-top: 2%;
+                            height: 40%;
+                            cursor: pointer;
+                            color:white;
+    
+    
+                        }
+    
+                    }
+
                     .r1{
                         width: 100%;
                         display: flex;
@@ -333,7 +363,7 @@
     
                     .friendReq{
                         background-color: white;
-                        height: 10vh;
+                        height: 15vh;
                         width: 10vw;
                         position: absolute;
                         margin-top: -10vh;
@@ -341,6 +371,7 @@
                         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
                         
                         button{
+                            margin-top: 1%;
                             width: 90%;
                             margin-left: 5%;
                             background-color: aliceblue;
@@ -349,6 +380,7 @@
                             border-radius: 5px;
                             padding: 2%;
                             margin-top: 2%;
+                            height: 40%;
                             cursor: pointer;
                             color:white;
     

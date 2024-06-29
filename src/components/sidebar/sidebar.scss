@@ -132,6 +132,8 @@
 }
 @media only screen and (min-width:768px){
     .Navbar{
+        width: 100vw;
+        height: 12vh;
         .logout{
             position: absolute;
             width: 10vw;

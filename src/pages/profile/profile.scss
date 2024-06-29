@@ -29,7 +29,18 @@
     
                 display: flex;
                 flex-direction: column;
-    
+                
+                .suggestions{
+                    position: absolute;
+                    min-height:10%;
+                    max-height: 25%;
+                    width: 80%;
+                    margin-left: 10%;
+
+                    li{
+                        cursor: pointer;
+                    }
+                }
     
                 .cancel{
                     position: absolute;
@@ -463,6 +474,31 @@
     
                 display: flex;
                 flex-direction: column;
+
+                .suggestions{
+                    // position: absolute;
+                    z-index: 8;
+                    min-height:8%;
+                    max-height: 25%;
+                    width: 90%;
+                    margin-left: 3%;
+                    overflow-y: scroll;
+                    background-color: aliceblue;
+                    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+
+                    p{
+                        cursor: pointer;
+                        padding-left: 10%;
+                        border-color: darkgray;
+                        border-width: 2px;
+                        border-style: solid;
+                        border-top: none;
+                        border-left: none;
+                        border-right: none;
+                        padding:1%;
+                    }
+                }
     
     
                 .cancel{
@@ -519,6 +555,10 @@
                 p{
                     width: 100%;
                     text-align: center;
+                }
+                .name{
+                    font-size: 4vh;
+
                 }
             }
     

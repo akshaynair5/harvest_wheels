@@ -74,6 +74,7 @@ function Notifications(){
                     await updateDoc(doc(db, 'users',  currentUser.uid), {
                         notifications: temp3.notifications,
                     });
+                    
                     setUD(temp3)
                 })
     }

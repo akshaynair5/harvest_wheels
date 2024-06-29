@@ -10,6 +10,9 @@ import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
+import { storage } from "../../firebase_config";
+import { getDownloadURL } from "firebase/storage";
+
 import Fuse from 'fuse.js'
 import data from '../../in.json'
 
@@ -221,12 +224,12 @@ function Explore (){
                     <div className='currentView'>
                         <button onClick={()=>{setView(false)}}>X</button>
                         <div className='viewContent'>
-                            {
+                            {/* {
                                 
                                 <div className='map'>
                                     <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe>
                                 </div>
-                            }
+                            } */}
 
                             <p className='desc'>
                                 <p className='Title'><b>Description</b></p>
@@ -295,9 +298,9 @@ function Explore (){
                                                 <p>{loadLink.destination}</p>
                                             </div>
                                         </div>
-                                        <div className='map'>
+                                        {/* <div className='map'>
                                             <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
-                                        </div>
+                                        </div> */}
                                         <div className='Details'>
                                             <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                             <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
@@ -351,9 +354,9 @@ function Explore (){
                                                 <p>{loadLink.destination}</p>
                                             </div>
                                         </div>
-                                        <div className='map'>
+                                        {/* <div className='map'>
                                             <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
-                                        </div>
+                                        </div> */}
                                         <div className='Details'>
                                             <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                             <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
@@ -423,7 +426,7 @@ function Explore (){
 
                                             </ReactMapGl> */}
 
-                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
                                             
                                         </div>
                                         <div className='Details'>
@@ -495,7 +498,7 @@ function Explore (){
 
                                             </ReactMapGl> */}
 
-                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
                                             
                                         </div>
                                         <div className='Details'>

@@ -3,7 +3,7 @@ import { collection, query, updateDoc, where ,or,and, addDoc} from "firebase/fir
 import pointer from '../../images/pointer.png'
 import line from '../../images/Line.png'
 import { doc, setDoc, getDocs } from "firebase/firestore"; 
-import { db } from '../../firebase_config';
+import { db, storage } from '../../firebase_config';
 import './profile.scss'
 import { Authcontext } from '../../contextProvider';
 import Sidebar from '../../components/sidebar/sidebar';
@@ -12,6 +12,7 @@ import tick from '../../images/Checkmark.svg'
 import cross from '../../images/cross.svg'
 import data from '../../in.json'
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 const token = process.env.API_ACCESS_TOKEN;
 
 function Profile(){
@@ -30,7 +31,12 @@ function Profile(){
     const [desc,setDesc] = useState('')
     const [space,setSpace] = useState(0);
     const [currentComment,setCC] = useState();
-    const [currentJourney,setCJ] = useState(); 
+    const [currentJourney,setCJ] = useState();
+    const [suggestions,setSuggestions] = useState([]); 
+    const [suggAct,setsuggAct] = useState(false)
+    const [suggestions2,setSuggestions2] = useState([]); 
+    const [suggAct2,setsuggAct2] = useState(false)
+    const [proofPopUp,setProofPopUp] = useState(false)
 
     const [addView,setAV] = useState(false)
 
@@ -51,11 +57,18 @@ function Profile(){
         }
         FetchUserData();
         const intervalId = setInterval(() => {
+            let tolerance = 0.5;
             if(currentJourney && currentJourney.currentPos){
                 navigator.geolocation.getCurrentPosition(async (pos)=>{
                     await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {  
                         currentPos:{lat:pos.coords.latitude,lon:pos.coords.longitude}
                     });
+                    if(Math.abs(currentJourney.dlat - pos.coords.latitude) <= 0.5 && Math.abs(pos.coords.longitude - currentJourney.dlon)){
+                        // const id = new Date().getTime()
+                        // let temp = userData.notifications;
+                        setProofPopUp(true);
+                        arrived()
+                    }
                 })
                 console.log('location updated!')
             }
@@ -63,6 +76,33 @@ function Profile(){
 
         return () => clearInterval(intervalId);
     },[])
+
+    const arrived = async ()=>{
+        for(let i=0;i<currentJourney.loads.size;i++){
+            const q=query(userRef,where("uid","==",`${currentJourney.loads[i].uid}`))
+            const querySnapShot1 = await getDocs(q)
+            const temp = [];
+            try{
+                querySnapShot1.forEach((doc)=>{
+                    temp.push(doc.data())
+                })
+            }catch(err){
+                console.log("error: ",err)
+            }
+            const id = new Date().getTime();
+            let noti = temp[0].notifications;
+            noti = [{uid:currentUser.uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i],tripID:currentJourney.time},...noti]
+            await updateDoc(doc(db, 'users', `${temp[0].uid}`), {  
+                currentTrip:"",
+                notifications:noti
+            });
+            let noti2 = userData.notifications
+            noti2 = [{uid:temp[0].uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i],approved:false},...noti2]
+            await updateDoc(doc(db, 'users', `${currentUser.uid}`), {  
+                notifications:noti2
+            });
+        }
+    }
 
     useEffect(()=>{
         if(userData && userData.job){
@@ -132,11 +172,13 @@ function Profile(){
         for(let i=0;i<data.length;i++){
             if(data[i].city == `${to}`){
                 d = data[i];
+                console.log(data[i])
             }
         }
         for(let i=0;i<data.length;i++){
             if(data[i].city == `${from}`){
                 c = data[i];
+                console.log(data[i])
             }
         }
         let dist = 0;
@@ -170,14 +212,18 @@ function Profile(){
             type:`${type}`,
             start:`${from}`,
             destination:`${to}`,
+            dlat:d.lat,
+            dlon:d.lon,
             date:`${date}`,
             details:`${desc}`,
             spaceLeft:`${space}`,
             expiry:false,
-            price: price ,
+            price: price.floor() ,
             comments:[],
             time:now,
-            currentPos:{lat:d.lat,lon:d.lng}
+            currentPos:{lat:c.lat,lon:c.lng},
+            loads:[],
+            proofOfArrival:'',
         }).then(()=>{
             console.log('done')
         });
@@ -202,10 +248,12 @@ function Profile(){
         await updateDoc(doc(db, 'users', c.uid), {
             currentTrip:curT
         });
-
+        let tempL = loadLink.loads;
+        tempL = [{id:c.uid,name:`${c.name}`,profileURL:`${c.profileUrl}`,price:`${c.space}`},...tempL]
         await updateDoc(doc(db, 'loadLinks', loadLink.userId+loadLink.time), {
             comments:temp,
-            spaceLeft: newSpaceLeft
+            spaceLeft: newSpaceLeft,
+            loads:tempL
         });
     }
 
@@ -213,11 +261,62 @@ function Profile(){
         console.log(currentJourney);
     },[currentJourney])
 
+    const HandleTypeChange = (e)=>{
+        setsuggAct(true)
+        const value = e.target.value;
+        setFrom(e.target.value);
+        const filteredSuggestions = data.filter(item =>
+          item.city.toLowerCase().includes(value.toLowerCase())
+        );
+        setSuggestions(filteredSuggestions);
+    }
+    const HandleTypeChange2 = (e)=>{
+        setsuggAct2(true)
+        const value = e.target.value;
+        setTo(e.target.value);
+        const filteredSuggestions = data.filter(item =>
+          item.city.toLowerCase().includes(value.toLowerCase())
+        );
+        setSuggestions2(filteredSuggestions);
+    }
+
+    const handleSetFrom = (suggestion)=>{
+        setFrom(suggestion.city)
+        setSuggestions([])
+        setsuggAct(false)
+    }
+
+    const HandleProofSubmission = async(e)=>{
+        const proof = e.target[6].files[0];
+        const storageid = new Date().getTime()
+        const storageRef = ref(storage,`${storageid}`)
+        await uploadBytesResumable(storageRef,proof)
+            .then(async ()=>{
+                getDownloadURL(storageRef).then(async (downloadURL) => {
+                    await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
+                        proofOfArrival:`${downloadURL}`
+                    })
+                    .then(()=>{
+                        setProofPopUp(false);
+                    })
+            })
+        })
+
+    }
 
 
     return(
         <div className="profile" style={{backgroundImage:`url(${bg})`,backgroundSize:'cover'}}>
             <Sidebar/>
+            {
+                proofPopUp && 
+                <div className='proofPopUp'>
+                    <form onSubmit={(e)=>{HandleProofSubmission(e)}}>
+                        <input type='file' placeholder='Submit Proof'></input>
+                        <button type='submit'>Submit</button>
+                    </form>
+                </div>
+            }
 
             {
                 addView && 
@@ -228,8 +327,37 @@ function Profile(){
                             <option value='request'>Request</option>
                             <option value='posting'>Posting</option>
                         </select>
-                        <input type='text' placeholder='from' onChange={(e)=>{setFrom(e.target.value)}}></input>
-                        <input type='text' placeholder='To'  onChange={(e)=>{setTo(e.target.value)}}></input>
+                        <input type='text' placeholder='from' onChange={(e)=>{HandleTypeChange(e)}} value={from}></input>
+                        {
+                            suggestions.length > 0 && from.length > 0 && suggAct &&
+                            <div className='suggestions'>
+                                {suggestions.map(suggestion => (
+                                    <p key={suggestion.city} onClick={(e)=>{handleSetFrom(suggestion)}}>{suggestion.city}</p>
+                                ))}
+                            </div>
+                        }
+                        {
+                            from.length > 0 && suggestions.length == 0 && suggAct &&
+                            <div className='suggestions'>
+                                <p>Sorry no Results found!!</p>
+                            </div>
+                        }
+
+                        <input type='text' placeholder='To'  onChange={(e)=>{HandleTypeChange2(e)}}></input>
+                        {
+                            suggestions2.length > 0 && to.length > 0 && suggAct2 &&
+                            <div className='suggestions'>
+                                {suggestions.map(suggestion => (
+                                    <p key={suggestion.city} onClick={(e)=>{handleSetFrom(suggestion)}}>{suggestion.city}</p>
+                                ))}
+                            </div>
+                        }
+                        {
+                            to.length > 0 && suggestions2.length == 0 && suggAct2 &&
+                            <div className='suggestions'>
+                                <p>Sorry no Results found!!</p>
+                            </div>
+                        }
                         <input type='date' placeholder='Time'  onChange={(e)=>{setDate(e.target.value)}}></input>
                         <textarea placeholder='description'  onChange={(e)=>{setDesc(e.target.value)}}></textarea>
                         <input type='number' placeholder='Space left(M^2) Approx'  onChange={(e)=>{setSpace(e.target.value)}}></input>
@@ -240,16 +368,16 @@ function Profile(){
             <div className='topBar'>
                 <div className='info'>
                     <img src={userData.profileUrl} className='profilePic'></img>
-                    <p>{userData.displayName}</p>
+                    <p className='name'>{userData.displayName}</p>
                     <p>{userData.job}</p>
                 </div>
-                <button onClick={()=>{addInitializer()}} className='Add'>New Tweet +</button>
+                <button onClick={()=>{addInitializer()}} className='Add'>New Post +</button>
 
                 <div className='map'>
-                    {
+                    {/* {
                         currentJourney && currentJourney.currentPos && 
                         <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
-                    }
+                    } */}
                 </div>
 
 
@@ -301,7 +429,7 @@ function Profile(){
 
                                             </ReactMapGl> */}
 
-                                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
                                             
                                         </div>
                                         <div className='Details'>
@@ -375,7 +503,7 @@ function Profile(){
                                                 </div>
                                             </div>
                                             <div className='map'>
-                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
+                                                {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
                                             </div>
                                             <div className='Details'>
                                                 <p className='d1'><b>Date:</b> {loadLink.date}</p>
