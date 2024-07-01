@@ -294,7 +294,7 @@ function Profile(){
             .then(async ()=>{
                 getDownloadURL(storageRef).then(async (downloadURL) => {
                     await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
-                        proofOfArrival:`${downloadURL}`
+                        proofOfArrival:`${downloadURL}`,
                     })
                     .then(()=>{
                         setProofPopUp(false);
