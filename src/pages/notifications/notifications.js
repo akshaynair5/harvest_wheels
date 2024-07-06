@@ -14,6 +14,7 @@ function Notifications(){
     const [userData,setUD] = useState([])
     const [notifications,setNt] = useState([]);
     const {currentUser} = useContext(Authcontext)
+    const [photo,setPhoto] = useState("");
 
     useEffect(()=>{
             const FetchUserData = async()=>{
@@ -33,6 +34,37 @@ function Notifications(){
             }
             FetchUserData();
     },[])
+
+    const onPay = async(n)=>{
+        const q=query(userRef,where("uid","==",`${n.uid}`))
+        const querySnapShot1 = await getDocs(q)
+        const temp = []
+        try{
+            querySnapShot1.forEach((doc)=>{
+                temp.push(doc.data())
+            })
+            setPhoto(temp[0].qrCode)
+        }catch(err){
+            console.log("error: ",err)
+        }
+    }
+    const viewProof = async(n)=>{
+        const q=query(userRef,where("time","==",`${n.tripID}`))
+        const querySnapShot1 = await getDocs(q)
+        const temp = []
+        try{
+            querySnapShot1.forEach((doc)=>{
+                temp.push(doc.data())
+            })
+            setPhoto(temp[0].proof)
+        }catch(err){
+            console.log("error: ",err)
+        }
+    }
+
+    const onCancelHandler = (n)=>{
+        setPhoto("")
+    }
 
     const AcceptFriendReq = (n)=>{
             const temp = [];
@@ -96,7 +128,15 @@ function Notifications(){
     return(
         <div className='notifications'>
             <Sidebar/>
-
+            {
+                photo != "" && 
+                <div className='photoPopUp'>
+                    <div className='main'>
+                        <button onClick={()=>onCancelHandler()} className='cancel'>X</button>
+                        <img src={photo} className='photo'></img>
+                    </div>
+                </div>
+            }
             <div className='n'>
                 {
                     notifications.map((n)=>{
@@ -114,6 +154,42 @@ function Notifications(){
                                     <div className='btns'>
                                         <img src={tick} onClick={()=>{AcceptFriendReq(n)}}></img>
                                         <img src={cross} onClick={()=>{DeclineFriendReq(n)}}></img>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        else if(n.type == 'payment-approval' && n.uid != userData.uid){
+                            return(
+                                <div className='notification'>
+                                    <div className='userInfo'>
+                                        <p className='name'>{n.name}</p>
+                                        <img src={n.profileUrl}></img>
+                                    </div>
+                                    <div className='price'>
+                                        Payment-Request
+                                    </div>
+
+                                    <div className='btns'>
+                                        <img src={tick} onClick={()=>{onPay(n)}}></img>
+                                        <img src={cross} onClick={()=>{viewProof(n)}}></img>
+                                    </div>
+                                </div>
+                            )
+                        }
+                        else{
+                            return(
+                                <div className='notification'>
+                                    <div className='userInfo'>
+                                        <p className='name'>{n.name}</p>
+                                        {/* <img src={n.profileUrl}></img> */}
+                                    </div>
+                                    <div className='price'>
+                                        Approve Payment 
+                                    </div>
+
+                                    <div className='btns'>
+                                        <img src={tick} onClick={()=>{onPay(n)}}></img>
+                                        <img src={cross} onClick={()=>{viewProof(n)}}></img>
                                     </div>
                                 </div>
                             )

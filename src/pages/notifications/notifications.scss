@@ -105,6 +105,41 @@
         position: fixed;
         height: 100%;
         width: 100%;
+        .photoPopUp{
+            position: fixed;
+            height: 100vh;
+            width: 100vw;
+            background-color: rgba(0, 0, 0, 0.468);
+            z-index: 10;
+            top:0;
+            .main{
+                height: 60vh;
+                width: 40vw;
+                position: absolute;
+                left:30vw;
+                top:15vh;
+                background-color: aliceblue;
+                border-radius: 15px;
+
+                .cancel{
+                    position: absolute;
+                    top:2vh;
+                    left: 37vw;
+                    background-color: transparent;
+                    font-size: 4vh;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                .photo{
+                    position: absolute;
+                    height: 90%;
+                    width: 60%;
+                    margin-left: 20%;
+                    margin-top: 5%;
+                }
+            }
+        }
         .n{
             position: absolute;
             height: 70vh;

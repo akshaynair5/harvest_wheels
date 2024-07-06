@@ -5,7 +5,7 @@ import bg from '../../images/Background.png'
 import pointer from '../../images/pointer.png'
 import line from '../../images/Line.png'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { collection, query, updateDoc, where ,or,and} from "firebase/firestore";
+import { collection, query, updateDoc, where ,or,and, orderBy} from "firebase/firestore";
 import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
@@ -59,9 +59,8 @@ function Home(){
                     fullStr = fullStr + userData.links[i];
                 }
                 console.log(fullStr)
-
-                const q=query(loadLinksRef)
-                const querySnapShot1 = await getDocs(q)
+                const q = query(loadLinksRef, orderBy("time", "desc"));
+                const querySnapShot1 = await getDocs(q);
                 const temp = [];
                 try{
                     querySnapShot1.forEach((doc)=>{

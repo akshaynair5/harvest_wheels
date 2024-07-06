@@ -37,6 +37,8 @@ function Profile(){
     const [suggestions2,setSuggestions2] = useState([]); 
     const [suggAct2,setsuggAct2] = useState(false)
     const [proofPopUp,setProofPopUp] = useState(false)
+    const [completed,setCompleted] = useState()
+    const [currentLoads,setCurrentLoads] = useState([])
 
     const [addView,setAV] = useState(false)
 
@@ -63,9 +65,12 @@ function Profile(){
                     await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {  
                         currentPos:{lat:pos.coords.latitude,lon:pos.coords.longitude}
                     });
-                    if(Math.abs(currentJourney.dlat - pos.coords.latitude) <= 0.5 && Math.abs(pos.coords.longitude - currentJourney.dlon)){
+                    console.log(100)
+                    if(Math.abs(currentJourney.dlat - pos.coords.latitude) <= 0.5 && Math.abs(pos.coords.longitude - currentJourney.dlon) && currentJourney.status == 0){
                         // const id = new Date().getTime()
                         // let temp = userData.notifications;
+                        console.log(10000)
+                        setCompleted(currentJourney);
                         setProofPopUp(true);
                         arrived()
                     }
@@ -78,8 +83,9 @@ function Profile(){
     },[])
 
     const arrived = async ()=>{
-        for(let i=0;i<currentJourney.loads.size;i++){
-            const q=query(userRef,where("uid","==",`${currentJourney.loads[i].uid}`))
+        console.log(currentJourney);
+        for(let i=0;i<currentJourney.loads.length;i++){
+            const q=query(userRef,where("uid","==",`${currentJourney.loads[i].id}`))
             const querySnapShot1 = await getDocs(q)
             const temp = [];
             try{
@@ -91,13 +97,19 @@ function Profile(){
             }
             const id = new Date().getTime();
             let noti = temp[0].notifications;
-            noti = [{uid:currentUser.uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i],tripID:currentJourney.time},...noti]
+            let temp2 = currentJourney
+            temp2.status = 1
+            await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
+                status:1
+            });
+            noti = [{uid:temp[0].uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i].price,tripID:currentJourney.time},...noti]
             await updateDoc(doc(db, 'users', `${temp[0].uid}`), {  
                 currentTrip:"",
-                notifications:noti
+                notifications:noti,
+                proof:1,
             });
             let noti2 = userData.notifications
-            noti2 = [{uid:temp[0].uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i],approved:false},...noti2]
+            noti2 = [{uid:currentUser.uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i].price,approved:false},...noti2]
             await updateDoc(doc(db, 'users', `${currentUser.uid}`), {  
                 notifications:noti2
             });
@@ -114,25 +126,30 @@ function Profile(){
                 today.setHours(0, 0, 0, 0);
                 try{
                     querySnapShot1.forEach((doc)=>{
-                        let docDate = new Date(doc.data().date);
-
-                        // Extract year, month, and day components from docDate
-                        let docYear = docDate.getFullYear();
-                        let docMonth = docDate.getMonth() + 1; // Month is 0-indexed, so add 1
-                        let docDay = docDate.getDate();
-                
-                        // Extract year, month, and day components from today's date
-                        let todayYear = today.getFullYear();
-                        let todayMonth = today.getMonth() + 1; // Month is 0-indexed, so add 1
-                        let todayDay = today.getDate();
-
                         temp.push(doc.data())
-                        if (docYear === todayYear && docMonth === todayMonth && docDay === todayDay) {
-                            setCJ(doc.data());
-                            
-                            console.log(doc.data());
-                        }
                     })
+                    const today = new Date();
+                    const todayFormatted = `${today.getFullYear()}-${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+                    temp.forEach(loadLink => {
+                        if (loadLink.date == todayFormatted) {
+                            const FetchCurrentTrip = async()=>{
+                                const q=query(userRef2,where("time","==",loadLink.time))
+                                const querySnapShot1 = await getDocs(q)
+                                const temp = [];
+                                try{
+                                    querySnapShot1.forEach((doc)=>{
+                                        temp.push(doc.data())
+                                    })
+                                    setCJ(temp[0])
+                                    console.log(temp[0])
+                                }catch(err){
+                                    console.log("error: ",err)
+                                }
+                            }
+                            FetchCurrentTrip();
+                        }
+                    });
+                    temp.sort((a, b) => b.time - a.time);
                     setUL(temp)
                 }catch(err){
                     console.log("error: ",err)
@@ -150,7 +167,9 @@ function Profile(){
                             temp.push(doc.data())
                         })
                         setCJ(temp[0])
-                        console.log(temp)
+                        if(userData.proof == 1) {
+                            setProofPopUp(true)
+                        }
                     }catch(err){
                         console.log("error: ",err)
                     }
@@ -172,13 +191,11 @@ function Profile(){
         for(let i=0;i<data.length;i++){
             if(data[i].city == `${to}`){
                 d = data[i];
-                console.log(data[i])
             }
         }
         for(let i=0;i<data.length;i++){
             if(data[i].city == `${from}`){
                 c = data[i];
-                console.log(data[i])
             }
         }
         let dist = 0;
@@ -191,10 +208,10 @@ function Profile(){
           return response.json();
         })
         .then(data => {
-          console.log(data); 
+
           dist = data.rows[0].elements[0].distance.value / 1000;
           dur = data.rows[0].elements[0].duration.value / (60 * 60);
-          console.log(dur);
+
         })
         .catch(error => {
           console.error('There was a problem with the fetch operation:', error);
@@ -202,10 +219,10 @@ function Profile(){
         const distanceFactor = 0.1;
         const durationFactor = 20;
 
-        const price =  (distanceFactor * dist + durationFactor * dur);
+        const price =  Math.floor(distanceFactor * dist + durationFactor * dur);
+
         
-        
-        await setDoc(doc(db, "loadLinks", currentUser.uid+now), {
+        await setDoc(doc(db, "loadLinks", `${currentUser.uid+now}`), {
             userId:`${currentUser.uid}`,
             profileURL:`${userData.profileUrl}`,
             name:`${userData.displayName}`,
@@ -213,17 +230,18 @@ function Profile(){
             start:`${from}`,
             destination:`${to}`,
             dlat:d.lat,
-            dlon:d.lon,
+            dlon:d.lng,
             date:`${date}`,
             details:`${desc}`,
             spaceLeft:`${space}`,
             expiry:false,
-            price: price.floor() ,
+            price: price,
             comments:[],
             time:now,
             currentPos:{lat:c.lat,lon:c.lng},
             loads:[],
             proofOfArrival:'',
+            status:0
         }).then(()=>{
             console.log('done')
         });
@@ -249,7 +267,7 @@ function Profile(){
             currentTrip:curT
         });
         let tempL = loadLink.loads;
-        tempL = [{id:c.uid,name:`${c.name}`,profileURL:`${c.profileUrl}`,price:`${c.space}`},...tempL]
+        tempL = [{id:c.uid,name:`${c.name}`,profileURL:`${c.profileURL}`,space:`${c.space}`,price:c.price},...tempL]
         await updateDoc(doc(db, 'loadLinks', loadLink.userId+loadLink.time), {
             comments:temp,
             spaceLeft: newSpaceLeft,
@@ -257,9 +275,9 @@ function Profile(){
         });
     }
 
-    useEffect(()=>{
-        console.log(currentJourney);
-    },[currentJourney])
+    // useEffect(()=>{
+    //     console.log(currentJourney);
+    // },[currentJourney])
 
     const HandleTypeChange = (e)=>{
         setsuggAct(true)
@@ -286,35 +304,69 @@ function Profile(){
         setsuggAct(false)
     }
 
+    const handleSetTo = (suggestion)=>{
+        setTo(suggestion.city)
+        setSuggestions2([])
+        setsuggAct2(false)
+    }
+
     const HandleProofSubmission = async(e)=>{
-        const proof = e.target[6].files[0];
+        e.preventDefault();
+        const proof = e.target[0].files[0];
         const storageid = new Date().getTime()
         const storageRef = ref(storage,`${storageid}`)
+        arrived();
         await uploadBytesResumable(storageRef,proof)
             .then(async ()=>{
                 getDownloadURL(storageRef).then(async (downloadURL) => {
                     await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
                         proofOfArrival:`${downloadURL}`,
                     })
-                    .then(()=>{
+                    .then(async ()=>{
                         setProofPopUp(false);
+                        await updateDoc(doc(db, 'users', `${currentUser.uid}`), {
+                            proof:0
+                        })
                     })
             })
         })
 
     }
 
+    const viewLoads = (loadLink)=>{
+        setCurrentLoads(loadLink.loads)
+    }
 
     return(
         <div className="profile" style={{backgroundImage:`url(${bg})`,backgroundSize:'cover'}}>
             <Sidebar/>
             {
-                proofPopUp && 
+                proofPopUp && currentJourney &&
                 <div className='proofPopUp'>
-                    <form onSubmit={(e)=>{HandleProofSubmission(e)}}>
-                        <input type='file' placeholder='Submit Proof'></input>
-                        <button type='submit'>Submit</button>
-                    </form>
+                    <div className='main'>
+                        <p>Please upload proof of Completion of trip - {currentJourney.start} - {currentJourney.destination} on {currentJourney.date}</p>
+                        <form onSubmit={(e)=>{HandleProofSubmission(e)}} className='form'>
+                            <input type='file' placeholder='Submit Proof' className='drop-container'></input>
+                            <button type='submit' className='btn'>Submit</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            {
+                currentLoads.length > 0 &&
+                <div className='currentLoads' onClick={()=>{setCurrentLoads([])}}>
+                    <div className='main'>
+                        {
+                            currentLoads.map((load)=>(
+                                <div className='load'>
+                                    <img src={load.profileURL}></img>
+                                    <p>{load.name}</p>
+                                    <p>{load.price}</p>
+                                    <p>{load.time}</p>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             }
 
@@ -343,12 +395,12 @@ function Profile(){
                             </div>
                         }
 
-                        <input type='text' placeholder='To'  onChange={(e)=>{HandleTypeChange2(e)}}></input>
+                        <input type='text' placeholder='To'  onChange={(e)=>{HandleTypeChange2(e)}} value={to}></input>
                         {
                             suggestions2.length > 0 && to.length > 0 && suggAct2 &&
                             <div className='suggestions'>
-                                {suggestions.map(suggestion => (
-                                    <p key={suggestion.city} onClick={(e)=>{handleSetFrom(suggestion)}}>{suggestion.city}</p>
+                                {suggestions2.map(suggestion => (
+                                    <p key={suggestion.city} onClick={(e)=>{handleSetTo(suggestion)}}>{suggestion.city}</p>
                                 ))}
                             </div>
                         }
@@ -435,6 +487,7 @@ function Profile(){
                                         <div className='Details'>
                                             <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                             <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                            <input type='button' className='bookBtn' onClick={()=>{viewLoads(loadLink)}} placeholder='View Loads' value='View Loads'></input>
                                         </div>
                                         </div>
                                         {
@@ -492,7 +545,7 @@ function Profile(){
                                                 <img src={loadLink.profileURL}></img>
                                             </div>
                                             <div className='travelInfo'>
-                                                <img src={line} className='line'></img>
+                                                {/* <img src={line} className='line'></img> */}
                                                 <div className='info'>
                                                     <img src={pointer}></img>
                                                     <p>{loadLink.start}</p>
@@ -508,6 +561,7 @@ function Profile(){
                                             <div className='Details'>
                                                 <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                                 <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
+                                                <input type='button' className='bookBtn' onClick={()=>{viewLoads(loadLink)}} placeholder='View Loads' value='View Loads'></input>
                                             </div>
                                         </div>
                                         {

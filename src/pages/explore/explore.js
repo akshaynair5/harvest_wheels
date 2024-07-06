@@ -5,7 +5,7 @@ import bg from '../../images/Background.png'
 import pointer from '../../images/pointer.png'
 import line from '../../images/Line.png'
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { collection, query, updateDoc, where ,or,and} from "firebase/firestore";
+import { collection, query, updateDoc, where ,or,and, orderBy} from "firebase/firestore";
 import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
@@ -80,6 +80,7 @@ function Explore (){
 
     useEffect(()=>{
         if(userData && userData.links){
+
             const FetchUserData = async()=>{
                 const q=query(loadLinksRef,where("userId","!=",`${currentUser.uid}`))
                 const querySnapShot1 = await getDocs(q)
@@ -88,6 +89,7 @@ function Explore (){
                     querySnapShot1.forEach((doc)=>{
                         temp.push(doc.data())
                     })
+                    temp.sort((a, b) => b.time - a.time);
                     setAD(temp);
                 }catch(err){
                     console.log("error: ",err)
@@ -224,12 +226,12 @@ function Explore (){
                     <div className='currentView'>
                         <button onClick={()=>{setView(false)}}>X</button>
                         <div className='viewContent'>
-                            {/* {
+                            {
                                 
                                 <div className='map'>
-                                    <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe>
+                                    {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe> */}
                                 </div>
-                            } */}
+                            }
 
                             <p className='desc'>
                                 <p className='Title'><b>Description</b></p>
@@ -259,7 +261,7 @@ function Explore (){
                             <input type='button' className='btn' onClick={()=>{bookSpace()}} placeholder='book' value='Book'></input>
                         </div>
                     </div>
-                } 
+                }  
 
                 <div className='loadLinks'>
                     <div className='sr'>
