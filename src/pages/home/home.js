@@ -3,6 +3,8 @@ import Sidebar from '../../components/sidebar/sidebar'
 import linkLine from '../../images/linkLine.png'
 import bg from '../../images/Background.png'
 import pointer from '../../images/pointer.png'
+import noResults from '../../images/no-results.png'
+import payment from '../../images/payment.png'
 import line from '../../images/Line.png'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { collection, query, updateDoc, where ,or,and, orderBy} from "firebase/firestore";
@@ -13,6 +15,7 @@ import { Authcontext } from '../../contextProvider'
 import ReactMapGl from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import data from '../../in.json'
+import { useNavigate } from 'react-router-dom';
 
 const TOKEN = process.env.API_ACCESS_TOKEN
 
@@ -30,6 +33,8 @@ function Home(){
     const [view,setView] = useState(false);
     const [currentCoords,setCoor] = useState({});
     const [windowWidth,setWindowWidth] = useState(window.innerWidth)
+    const [block,setBlock] = useState(false);
+    const navigate = useNavigate();
 
 
     useEffect(()=>{
@@ -42,8 +47,8 @@ function Home(){
                     querySnapShot1.forEach((doc)=>{
                         temp.push(doc.data())
                     })
-                    console.log(temp)
                     setUD(temp[0])
+                    setBlock(temp[0].block);
                 }catch(err){
                     console.log("error: ",err)
                 }
@@ -93,6 +98,10 @@ function Home(){
     }
     
     const bookSpace = async()=>{
+        // if(block){
+        //     setBlockNoti(true);
+        // }
+
         console.log(currentView);
         let temp = currentView.comments;
         let now = new Date().getTime()
@@ -124,45 +133,65 @@ function Home(){
                     <div className='currentView'>
                         <button onClick={()=>{setView(false)}}>X</button>
                         <div className='viewContent'>
-                            {
-                                
-                                <div className='map'>
-                                    {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe> */}
+                        {
+                            block == false && 
+                            <>
+                                {
+                                    
+                                    <div className='map'>
+                                        {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe> */}
+                                    </div>
+                                }
+
+                                <p className='desc'>
+                                    <p className='Title'><b>Description</b></p>
+                                    <p className='content'>{currentView.details}</p>
+                                </p>
+                                <p className='Title'><b>Trip Info</b></p>
+                                <div className='info'>
+                                    <img src={pointer}></img>
+                                    <p>Start: {currentView.start}</p>
+                                </div>
+                                <div className='info'>
+                                    <img src={pointer}></img>
+                                    <p>Destination: {currentView.destination}</p>
+                                </div>
+                                <p className='Title'><b>Space Needed</b></p>
+                                <div className='space'>
+                                    <p className='sn'>{space?space:0}</p>
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={currentView.spaceLeft}
+                                        onChange={(e)=>{setSpace(e.target.value)}}
+                                    />
+                                    <p>{currentView.spaceLeft} m/s^2</p>
+                                </div>
+                                <div className='btns'>
+                                    <button onClick={()=>{setView(false)}}>Close</button>
+                                    <button onClick={()=>{bookSpace()}}>Book</button>
+                                </div>
+                            </>
+                        }
+                        {
+                                block == true && 
+                                <div className='Alert'>
+
+                                    <img src={payment}></img>
+                                    <p>Please settle all pending travel payments before booking another transportation service. You can view and pay your pending balances on the Notifications page</p>
+                                    <div className='btns'>
+                                        <button onClick={()=>{setView(false)}}>Close</button>
+                                        <button onClick={()=>{navigate('/notifications')}}>Pay</button>
+                                    </div>
+
                                 </div>
                             }
-
-                            <p className='desc'>
-                                <p className='Title'><b>Description</b></p>
-                                <p className='content'>{currentView.details}</p>
-                            </p>
-                            <p className='Title'><b>Trip Info</b></p>
-                            <div className='info'>
-                                <img src={pointer}></img>
-                                <p>Start: {currentView.start}</p>
-                            </div>
-                            <div className='info'>
-                                <img src={pointer}></img>
-                                <p>Destination: {currentView.destination}</p>
-                            </div>
-                            <p className='Title'><b>Space Needed</b></p>
-                            <div className='space'>
-                                <p className='sn'>{space?space:0}</p>
-                                <input
-                                    type="range"
-                                    min={0}
-                                    max={currentView.spaceLeft}
-                                    onChange={(e)=>{setSpace(e.target.value)}}
-                                />
-                                <p>{currentView.spaceLeft} m/s^2</p>
-                            </div>
-
-                            <input type='button' className='btn' onClick={()=>{bookSpace()}} placeholder='book' value='Book'></input>
                         </div>
                     </div>
                 } 
  
                 {
-                    windowWidth < 768 &&
+                    windowWidth < 768 && userLinksData.length > 0 &&
                     <div className='loadLinks'>
                     {
                         userLinksData.map((loadLink)=>{
@@ -235,7 +264,7 @@ function Home(){
                 </div>
                 }
                 {
-                    windowWidth >= 768 && 
+                    windowWidth >= 768 && userLinksData.length > 0 && 
                     <div className='loadLinks'>
                     {
                         userLinksData.map((loadLink)=>{
@@ -304,7 +333,18 @@ function Home(){
                         })
                     }
                 </div> 
-                }
+            }
+            {
+                userLinksData.length == 0 && 
+                <div>
+                    <div className='loadLinks'>
+                        <div className='disclaimer'>
+                            <img src={noResults}></img>
+                            <p>Your home page is empty as you haven't added any friends yet. Head over to the Explore page to find new people and send friend requests!</p>
+                        </div>
+                    </div>
+                </div> 
+            }
             </div>
         </div>
     )

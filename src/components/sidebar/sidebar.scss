@@ -52,6 +52,7 @@
                 height: 60%;
                 // margin-top: 2vh;
                 margin-top: 4%;
+                cursor: pointer;
             }
         }
         .outer{
@@ -146,11 +147,17 @@
     
             button{
                 color: red;
-                padding: 1%;
+                padding: 2vh;
                 width: 100%;
                 cursor: pointer;
                 background-color: transparent;
                 border: none;
+                margin-top: 10%;
+                border-radius: 5px;
+                font-weight: 600;
+            }
+            button:hover{
+                background-color: azure;
             }
         }
         .topNav{
@@ -177,6 +184,7 @@
                 border-radius: 8px;
                 height: 8vh;
                 margin-top: 2vh;
+                cursor: pointer;
             }
         }
         .outer{

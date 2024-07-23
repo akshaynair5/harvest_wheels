@@ -12,9 +12,11 @@ import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
 import { storage } from "../../firebase_config";
 import { getDownloadURL } from "firebase/storage";
+import payment from '../../images/payment.png'
 
 import Fuse from 'fuse.js'
 import data from '../../in.json'
+import { useNavigate } from 'react-router-dom';
 
 function Explore (){
 
@@ -33,6 +35,8 @@ function Explore (){
     const [view,setView] = useState(false);
     const [view2,setView2] = useState(false);
     const [currentFriend,setCurrentFriend] = useState('');
+    const [block,setBlock] = useState(false);
+    const navigate = useNavigate();
 
     // const obj =  [
     //     {
@@ -71,6 +75,7 @@ function Explore (){
                         temp.push(doc.data())
                     })
                     setUD(temp[0])
+                    setBlock(temp[0].block);
                 }catch(err){
                     console.log("error: ",err)
                 }
@@ -137,41 +142,6 @@ function Explore (){
 
         setView2(false)
     }
-    // const sendRequest = async()=>{
-        // const temp = [];
-        // const FetchUserData = async()=>{
-        //     const q=query(userRef,where("uid","==",`${currentFriend.userId}`))
-        //     const querySnapShot1 = await getDocs(q)
-        //     try{
-        //         querySnapShot1.forEach((doc)=>{
-        //             temp.push(doc.data())
-        //         })
-        //         console.log(temp[0])
-        //     }catch(err){
-        //         console.log("error: ",err)
-        //     }
-
-        // }
-        // FetchUserData()
-    //         .then(async ()=>{
-    //             let temp1 = userData.links;
-    //             let temp2 = temp[0].links;
-        
-    //             console.log(temp[0].links)
-        
-    //             temp1 = [...temp1,temp[0].uid];
-    //             temp2 = [...temp2,currentUser.uid];
-    
-                // await updateDoc(doc(db, 'users', currentUser.uid), {
-                //     links: temp1,
-                // });
-    //             await updateDoc(doc(db, 'users', currentFriend.userId), {
-    //                 links: temp2,
-    //             });
-    //             setView2(false);
-    //         })
-    // }
-
     useEffect(()=>{
         if(search != ''){
             console.log('content');
@@ -224,41 +194,62 @@ function Explore (){
             {
                     view && 
                     <div className='currentView'>
-                        <button onClick={()=>{setView(false)}}>X</button>
-                        <div className='viewContent'>
+                        <button onClick={()=>{setView(false)}} className='close'>X</button>
+                            <div className='viewContent'>
                             {
-                                
-                                <div className='map'>
-                                    {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe> */}
+                                block == false && 
+                                <>
+                                    {
+                                        
+                                        <div className='map'>
+                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentCoords.lat}/${currentCoords.lon}`} title="Streets"></iframe> */}
+                                        </div>
+                                    }
+
+                                    <p className='desc'>
+                                        <p className='Title'><b>Description</b></p>
+                                        <p className='content'>{currentView.details}</p>
+                                    </p>
+                                    <p className='Title'><b>Trip Info</b></p>
+                                    <div className='info'>
+                                        <img src={pointer}></img>
+                                        <p>Start: {currentView.start}</p>
+                                    </div>
+                                    <div className='info'>
+                                        <img src={pointer}></img>
+                                        <p>Destination: {currentView.destination}</p>
+                                    </div>
+                                    <p className='Title'><b>Space Needed</b></p>
+                                    <div className='space'>
+                                        <p className='sn'>{space?space:0}</p>
+                                        <input
+                                            type="range"
+                                            min={0}
+                                            max={currentView.spaceLeft}
+                                            onChange={(e)=>{setSpace(e.target.value)}}
+                                        />
+                                        <p>{currentView.spaceLeft} m/s^2</p>
+                                    </div>
+                                    <div className='btns'>
+                                        <button onClick={()=>{setView(false)}}>Close</button>
+                                        <button onClick={()=>{bookSpace()}}>Book</button>
+                                    </div>
+                                </>
+                            }
+                            
+                            {
+                                block == true && 
+                                <div className='Alert'>
+                                    <img src={payment}></img>
+                                    <p>Please settle all pending travel payments before booking another transportation service. You can view and pay your pending balances on the Notifications page</p>
+                                    <div className='btns'>
+                                        <button onClick={()=>{setView(false)}}>Close</button>
+                                        <button onClick={()=>{navigate('/notifications')}}>Pay</button>
+                                    </div>
+
                                 </div>
                             }
 
-                            <p className='desc'>
-                                <p className='Title'><b>Description</b></p>
-                                <p className='content'>{currentView.details}</p>
-                            </p>
-                            <p className='Title'><b>Trip Info</b></p>
-                            <div className='info'>
-                                <img src={pointer}></img>
-                                <p>Start: {currentView.start}</p>
-                            </div>
-                            <div className='info'>
-                                <img src={pointer}></img>
-                                <p>Destination: {currentView.destination}</p>
-                            </div>
-                            <p className='Title'><b>Space Needed</b></p>
-                            <div className='space'>
-                                <p className='sn'>{space?space:0}</p>
-                                <input
-                                    type="range"
-                                    min={0}
-                                    max={currentView.spaceLeft}
-                                    onChange={(e)=>{setSpace(e.target.value)}}
-                                />
-                                <p>{currentView.spaceLeft} m/s^2</p>
-                            </div>
-
-                            <input type='button' className='btn' onClick={()=>{bookSpace()}} placeholder='book' value='Book'></input>
                         </div>
                     </div>
                 }  

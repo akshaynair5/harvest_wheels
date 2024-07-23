@@ -10,9 +10,12 @@ import Sidebar from '../../components/sidebar/sidebar';
 import bg from '../../images/Background.png'
 import tick from '../../images/Checkmark.svg'
 import cross from '../../images/cross.svg'
+import payment from '../../images/payment.png'
 import data from '../../in.json'
 import 'mapbox-gl/dist/mapbox-gl.css';
+import noResults from '../../images/no-results.png'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
 const token = process.env.API_ACCESS_TOKEN;
 
 function Profile(){
@@ -41,6 +44,8 @@ function Profile(){
     const [currentLoads,setCurrentLoads] = useState([])
 
     const [addView,setAV] = useState(false)
+    const navigate = useNavigate();
+    const [block,setBlock] = useState(false);
 
 
     useEffect(()=>{
@@ -53,6 +58,7 @@ function Profile(){
                     temp.push(doc.data())
                 })
                 setUD(temp[0])
+                setBlock(temp[0].block);
             }catch(err){
                 console.log("error: ",err)
             }
@@ -102,14 +108,14 @@ function Profile(){
             await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
                 status:1
             });
-            noti = [{uid:temp[0].uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i].price,tripID:currentJourney.time},...noti]
+            noti = [{uid:currentUser.uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i].price,tripID:currentJourney.time},...noti]
             await updateDoc(doc(db, 'users', `${temp[0].uid}`), {  
                 currentTrip:"",
                 notifications:noti,
                 proof:1,
             });
             let noti2 = userData.notifications
-            noti2 = [{uid:currentUser.uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i].price,approved:false},...noti2]
+            noti2 = [{uid:temp[0].uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i].price,approved:false},...noti2]
             await updateDoc(doc(db, 'users', `${currentUser.uid}`), {  
                 notifications:noti2
             });
@@ -226,7 +232,7 @@ function Profile(){
             userId:`${currentUser.uid}`,
             profileURL:`${userData.profileUrl}`,
             name:`${userData.displayName}`,
-            type:`${type}`,
+            type:'posting',
             start:`${from}`,
             destination:`${to}`,
             dlat:d.lat,
@@ -337,6 +343,11 @@ function Profile(){
         setCurrentLoads(loadLink.loads)
     }
 
+    const removeSuggs = ()=>{
+        setsuggAct2(false)
+        setsuggAct(false)
+    }
+
     return(
         <div className="profile" style={{backgroundImage:`url(${bg})`,backgroundSize:'cover'}}>
             <Sidebar/>
@@ -373,64 +384,83 @@ function Profile(){
             {
                 addView && 
                 <div className='popUp'>
-                    <div className='content'>
-                        <button onClick={()=>{setAV(false)}} className='cancel'>X</button>
-                        <select className='selectType' onChange={(e)=>{setType(e.target.value)}} style={{marginTop:'5vh',padding:'2vh'}}>
-                            <option value='request'>Request</option>
-                            <option value='posting'>Posting</option>
-                        </select>
-                        <input type='text' placeholder='from' onChange={(e)=>{HandleTypeChange(e)}} value={from}></input>
+                    <div className='content' onClick={()=>{removeSuggs()}}>
                         {
-                            suggestions.length > 0 && from.length > 0 && suggAct &&
-                            <div className='suggestions'>
-                                {suggestions.map(suggestion => (
-                                    <p key={suggestion.city} onClick={(e)=>{handleSetFrom(suggestion)}}>{suggestion.city}</p>
-                                ))}
-                            </div>
-                        }
-                        {
-                            from.length > 0 && suggestions.length == 0 && suggAct &&
-                            <div className='suggestions'>
-                                <p>Sorry no Results found!!</p>
-                            </div>
-                        }
+                            block == false && 
+                            <>
+                                <input type='text' placeholder='from' onChange={(e)=>{HandleTypeChange(e)}} value={from}></input>
+                                {
+                                    suggestions.length > 0 && from.length > 0 && suggAct &&
+                                    <div className='suggestions' style={{marginTop:'11vh'}}>
+                                        {suggestions.map(suggestion => (
+                                            <p key={suggestion.city} onClick={(e)=>{handleSetFrom(suggestion)}}>{suggestion.city}</p>
+                                        ))}
+                                    </div>
+                                }
+                                {
+                                    from.length > 0 && suggestions.length == 0 && suggAct &&
+                                    <div className='suggestions' style={{marginTop:'11vh'}}>
+                                        <p>Sorry no Results found!!</p>
+                                    </div>
+                                }
 
-                        <input type='text' placeholder='To'  onChange={(e)=>{HandleTypeChange2(e)}} value={to}></input>
-                        {
-                            suggestions2.length > 0 && to.length > 0 && suggAct2 &&
-                            <div className='suggestions'>
-                                {suggestions2.map(suggestion => (
-                                    <p key={suggestion.city} onClick={(e)=>{handleSetTo(suggestion)}}>{suggestion.city}</p>
-                                ))}
-                            </div>
+                                <input type='text' placeholder='To'  onChange={(e)=>{HandleTypeChange2(e)}} value={to}></input>
+                                {
+                                    suggestions2.length > 0 && to.length > 0 && suggAct2 &&
+                                    <div className='suggestions' style={{marginTop:'22vh'}}>
+                                        {suggestions2.map(suggestion => (
+                                            <p key={suggestion.city} onClick={(e)=>{handleSetTo(suggestion)}}>{suggestion.city}</p>
+                                        ))}
+                                    </div>
+                                }
+                                {
+                                    to.length > 0 && suggestions2.length == 0 && suggAct2 &&
+                                    <div className='suggestions' style={{marginTop:'22vh'}}>
+                                        <p>Sorry no Results found!!</p>
+                                    </div>
+                                }
+                                <input type='date' placeholder='Time'  onChange={(e)=>{setDate(e.target.value)}}></input>
+                                <input placeholder='description'  onChange={(e)=>{setDesc(e.target.value)}}></input>
+                                <input type='number' placeholder='Space left(M^2) Approx'  onChange={(e)=>{setSpace(e.target.value)}}></input>
+                                <div className='btns'>
+                                    <button onClick={()=>{setAV(false)}}>Close</button>
+                                    <button onClick={()=>{onSubmit()}} >Post</button>
+                                </div>
+                            </>
                         }
                         {
-                            to.length > 0 && suggestions2.length == 0 && suggAct2 &&
-                            <div className='suggestions'>
-                                <p>Sorry no Results found!!</p>
-                            </div>
+                                block == true && 
+                                <div className='Alert'>
+                                    <img src={payment}></img>
+                                    <p>Please settle all pending travel payments before booking another transportation service. You can view and pay your pending balances on the Notifications page</p>
+                                    <div className='btns'>
+                                        <button onClick={()=>{setAV(false)}}>Close</button>
+                                        <button onClick={()=>{navigate('/notifications')}}>Pay</button>
+                                    </div>
+                                </div>
                         }
-                        <input type='date' placeholder='Time'  onChange={(e)=>{setDate(e.target.value)}}></input>
-                        <textarea placeholder='description'  onChange={(e)=>{setDesc(e.target.value)}}></textarea>
-                        <input type='number' placeholder='Space left(M^2) Approx'  onChange={(e)=>{setSpace(e.target.value)}}></input>
-                        <button onClick={()=>{onSubmit()}} className='submit'>Submit</button>
                     </div>
                 </div>
             }
             <div className='topBar'>
                 <div className='info'>
                     <img src={userData.profileUrl} className='profilePic'></img>
-                    <p className='name'>{userData.displayName}</p>
-                    <p>{userData.job}</p>
+                    <div className='details'>
+                        <p className='name'>{userData.displayName}</p>
+                        <p>{userData.job}</p>
+                    </div>
                 </div>
                 <button onClick={()=>{addInitializer()}} className='Add'>New Post +</button>
 
-                <div className='map'>
-                    {/* {
-                        currentJourney && currentJourney.currentPos && 
-                        <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
-                    } */}
-                </div>
+                {
+                    currentJourney && currentJourney.currentPos &&
+                    <div className='map'>
+                        {/* {
+                            currentJourney && currentJourney.currentPos && 
+                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
+                        } */}
+                    </div>
+                }
 
 
             </div>
@@ -438,6 +468,13 @@ function Profile(){
 
             <div className='main'>
                 <div className='loadLinks'>
+                    {
+                        userLinks.length == 0 && 
+                            <div className='disclaimer'>
+                                <img src={noResults}></img>
+                                <p>Your postings section is currently empty. Once you create travel posts, updates and booking details will appear here.</p>
+                            </div>
+                    }
                     {userLinks.length > 0 && windowWidth < 768 && 
                         userLinks.map((loadLink)=>{
                             if(loadLink.type == 'posting'){
@@ -467,23 +504,26 @@ function Profile(){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='map'>
-                                            {/* <ReactMapGl
-                                                mapboxAccessToken = {TOKEN}
-                                                initailViewState={{
-                                                    longitude:28.6448,
-                                                    latitude:78.004,
-                                                    zoom:6
-                                                }}
-                                                mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
+                                        {
+                                            obj && 
+                                            <div className='map'>
+                                                {/* <ReactMapGl
+                                                    mapboxAccessToken = {TOKEN}
+                                                    initailViewState={{
+                                                        longitude:28.6448,
+                                                        latitude:78.004,
+                                                        zoom:6
+                                                    }}
+                                                    mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
 
-                                            >
+                                                >
 
-                                            </ReactMapGl> */}
+                                                </ReactMapGl> */}
 
-                                            {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
-                                            
-                                        </div>
+                                                {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
+                                                
+                                            </div>
+                                        }
                                         <div className='Details'>
                                             <p className='d1'><b>Date:</b> {loadLink.date}</p>
                                             <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>

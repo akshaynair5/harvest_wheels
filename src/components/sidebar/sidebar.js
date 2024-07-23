@@ -50,6 +50,7 @@ function Sidebar(){
                 vis && 
                 <div className='logout'>
                     <button onClick={()=>{signOut(auth)}}>Sign Out</button>
+                    <button onClick={()=>{setVis(false)}}>Cancel</button>
                 </div>
             }
             {

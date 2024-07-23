@@ -7,6 +7,7 @@ import { getDownloadURL } from "firebase/storage";
 import {Link, useNavigate } from "react-router-dom";
 import ProfilePicIcon from "../../images/user.png"
 import QRImage from "../../images/QR-Code-PNG-Photo.png"
+import logo from "../../images/HW_Logo.jpg"
 import { db } from "../../firebase_config";
 import { doc, setDoc } from "firebase/firestore"; 
 import './login&register.scss'
@@ -15,58 +16,57 @@ function Register (){
     const navigate = useNavigate()
     const [dpLink,setDPLink] = useState('');
     const [err,setErr] = useState(false)
-    const HandleSubmit= async (e)=>{
+    const HandleSubmit = async (e) => {
         e.preventDefault();
-        const displayName = e.target[0].value
-        const email = e.target[1].value
-        const number = e.target[2].value
-        const job = e.target[3].value
-        const POR = e.target[4].value
-        const password = e.target[5].value
-        const DP = e.target[6].files[0]
-        const QR = e.target[7].files[0]
-        const storageid = new Date().getTime()
-        await createUserWithEmailAndPassword(auth,email,password)
-            .then(async (User)=>{
-                console.log(User.user.uid)
-                const storageRef = ref(storage,`${storageid}`)
-                const storageRef2 = ref(storage,`${storageid + 10}`)
-                await uploadBytesResumable(storageRef,DP)
-                    .then(()=>{
-                        getDownloadURL(storageRef).then((downloadURL)=>{
-                            setDPLink(downloadURL)
-                        })
-                    })
-                await uploadBytesResumable(storageRef+10,QR)
-                    .then(()=>{
-                        getDownloadURL(storageRef2).then(async (downloadURL) => {
-                            try{
-                                await setDoc(doc(db, "users", User.user.uid), {
-                                    uid: User.user.uid,
-                                    displayName:displayName,
-                                    email:email,
-                                    profileUrl: dpLink,
-                                    number:number,
-                                    job:job,
-                                    placeOfResidence:POR,
-                                    links:[],
-                                    currentTrip:"",
-                                    notifications:[],
-                                    proof:0,
-                                    qrCode:downloadURL
-                                });
-                            }
-                            catch(err){
-                                console.log(err)
-                                setErr(true)
-                            }
-                        navigate("/Home")
-                    })
-                })
-            })
-        
-
-    }
+    
+        const displayName = e.target[0].value;
+        const email = e.target[1].value;
+        const number = e.target[2].value;
+        const job = e.target[3].value;
+        const POR = e.target[4].value;
+        const password = e.target[5].value;
+        const DP = e.target[6].files[0];
+        const QR = e.target[7].files[0];
+        const storageid = new Date().getTime();
+    
+        try {
+            const User = await createUserWithEmailAndPassword(auth, email, password);
+            console.log(User.user.uid);
+    
+            const storageRef = ref(storage, `${storageid}`);
+            const storageRef2 = ref(storage, `${storageid + 10}`);
+    
+            const uploadDP = uploadBytesResumable(storageRef, DP);
+            const uploadQR = uploadBytesResumable(storageRef2, QR);
+    
+            await uploadDP;
+            const dpLink = await getDownloadURL(storageRef);
+    
+            await uploadQR;
+            const qrLink = await getDownloadURL(storageRef2);
+    
+            await setDoc(doc(db, "users", User.user.uid), {
+                uid: User.user.uid,
+                displayName: displayName,
+                email: email,
+                profileUrl: dpLink,
+                number: number,
+                job: job,
+                placeOfResidence: POR,
+                links: [],
+                currentTrip: "",
+                notifications: [],
+                proof: 0,
+                qrCode: qrLink,
+                block: 0
+            });
+    
+            navigate("/explore");
+        } catch (err) {
+            console.log(err);
+            setErr(true);
+        }
+    };    
     return(
         <div className="FormBox">
             <form onSubmit={(e)=>HandleSubmit(e)}>

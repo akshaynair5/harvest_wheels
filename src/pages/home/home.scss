@@ -25,6 +25,12 @@
                 top: 0vh;
                 left: 0vh;
                 z-index: 7;
+
+                .close{
+                    background-color: transparent;
+                    color: white;
+                    border: none;
+                }
     
                 .viewContent{
                     height: 80vh;
@@ -38,6 +44,35 @@
                     overflow-y: scroll;
                     display: flex;
                     flex-direction: column;
+
+                    .Alert{
+                        p{
+                            width: 100%;
+                            text-align: center;
+                            font-size: 13px;
+                        }
+                        img{
+                            width: 70%;
+                            margin-left: 15%;
+                            margin-top: 20%;
+                            margin-bottom: 50%;
+                        }
+                        .btns{
+                            button{
+                                background-color: #08A318;
+                                border: none;
+                                color: white;
+                                padding: 4%;
+                                font-size: 3vh;
+                                width:40%;
+                                margin-left: 6.5%;
+                                border-radius: 10px;
+                                cursor: pointer;
+                                margin-bottom: 5vh;
+                                margin-top: 5vh;
+                            }
+                        }
+                    }
     
                     .map{
                         width: 80%;
@@ -85,20 +120,20 @@
                         }
                     }
     
-                    .btn{
-                        background-color: #08A318;
-                        border: none;
-                        color: white;
-                        padding: 4%;
-                        font-size: 3vh;
-                        width:60%;
-                        margin-left: 20%;
-                        border-radius: 10px;
-                        cursor: pointer;
-                        margin-bottom: 5vh;
-                        margin-top: 5vh;
-    
-    
+                    .btns{
+                        button{
+                            background-color: #08A318;
+                            border: none;
+                            color: white;
+                            padding: 4%;
+                            font-size: 3vh;
+                            width:40%;
+                            margin-left: 6.5%;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            margin-bottom: 5vh;
+                            margin-top: 5vh;
+                        }
                     }
                 }
                 .viewContent::-webkit-scrollbar {
@@ -131,6 +166,25 @@
                 // background-color: black;
                 width: 100%;
                 overflow-y: scroll;
+
+                .disclaimer{
+                    margin-top: 15vh;
+                    width: 100%;
+                    height: 40vh;
+
+                    img{
+                        height: 40%;
+                        width: 40%;
+                        margin-left: 28%;
+                    }
+                    p{
+                        margin-top: 5%;
+                        width: 90%;
+                        margin-left: 5%;
+                        text-align: center;
+                        font-size: 1.5vh;
+                    }
+                }
     
                 .request{
                     height: 45vh;
@@ -270,6 +324,12 @@
                 top: 0vh;
                 left: 0vh;
                 z-index: 7;
+
+                .close{
+                    background-color: transparent;
+                    color: white;
+                    border: none;
+                }
     
                 .viewContent{
                     height: 70vh;
@@ -283,6 +343,38 @@
                     overflow-y: scroll;
                     display: flex;
                     flex-direction: column;
+
+                    .Alert{
+                        p{
+                            width: 100%;
+                            text-align: center;
+                            font-size: 2.5vh;
+                        }
+                        img{
+                            width: 20%;
+                            margin-left: 40%;
+                            margin-top: 5%;
+                            margin-bottom: 5%;
+                        }
+                        .btns{
+                            width: 50%;
+                            margin-left: 23.2%;
+                            display: flex;
+                            button{
+                                background-color: #08A318;
+                                border: none;
+                                color: white;
+                                padding: 2.5%;
+                                font-size: 3vh;
+                                width:50%;
+                                margin-left: 5%;
+                                border-radius: 10px;
+                                cursor: pointer;
+                                margin-bottom: 5vh;
+                                margin-top: 5vh;
+                            }
+                        }
+                    }
     
                     .map{
                         width: 80%;
@@ -330,20 +422,23 @@
                         }
                     }
     
-                    .btn{
-                        background-color: #08A318;
-                        border: none;
-                        color: white;
-                        padding: 2%;
-                        font-size: 3vh;
-                        width:60%;
-                        margin-left: 20%;
-                        border-radius: 10px;
-                        cursor: pointer;
-                        margin-bottom: 5vh;
-                        margin-top: 5vh;
-    
-    
+                    .btns{
+                        width: 50%;
+                        margin-left: 23.2%;
+                        display: flex;
+                        button{
+                            background-color: #08A318;
+                            border: none;
+                            color: white;
+                            padding: 2.5%;
+                            font-size: 3vh;
+                            width:50%;
+                            margin-left: 5%;
+                            border-radius: 10px;
+                            cursor: pointer;
+                            margin-bottom: 5vh;
+                            margin-top: 5vh;
+                        }
                     }
                 }
                 .viewContent::-webkit-scrollbar {
@@ -376,6 +471,24 @@
                 // background-color: black;
                 width: 100%;
                 overflow-y: scroll;
+
+                .disclaimer{
+                    margin-top: 15vh;
+                    width: 100%;
+                    height: 40vh;
+
+                    img{
+                        height: 50%;
+                        width: 10%;
+                        margin-left: 40%;
+                    }
+                    p{
+                        margin-top: 5%;
+                        width: 40%;
+                        margin-left: 25%;
+                        text-align: center;
+                    }
+                }
     
                 .request{
                     display: flex;
