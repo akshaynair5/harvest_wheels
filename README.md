@@ -58,17 +58,15 @@ The Transportation and Logistics Platform aims to streamline the process of find
 
 The Home Page serves as the main dashboard for users. Here, users can see postings from their friends or connections. The page is designed to provide a quick overview of relevant posts and activities.
 
-_Image placeholder for Home Page:_
-
-![Home Page](path_to_home_page_image)
 
 ### Explore Page
 
 The Explore Page allows users to browse and search for journey postings across India. Users can filter results using keywords and find transportation services that match their needs.
 
-_Image placeholder for Explore Page:_
+![image](https://github.com/user-attachments/assets/2207ef3b-a33d-48bb-8bd9-a8eed610f033)
 
-![Explore Page](path_to_explore_page_image)
+![image](https://github.com/user-attachments/assets/57ea0aec-0560-49e3-800e-54dd0f7d2d44)
+
 
 ### Notifications Page
 
@@ -84,7 +82,7 @@ The Profile Page displays detailed information about the user’s activities and
 
 _Image placeholder for Profile Page:_
 
-![Profile Page](path_to_profile_page_image)
+![image](https://github.com/user-attachments/assets/1645e365-7c29-4619-b10a-2512cc10bb88)
 
 ## Technologies Used
 
