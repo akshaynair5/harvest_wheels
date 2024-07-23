@@ -1,29 +1,29 @@
 {
   "files": {
-    "main.css": "/Harvest_Wheels/static/css/main.21cf99cf.css",
-    "main.js": "/Harvest_Wheels/static/js/main.415e834c.js",
-    "static/js/453.e2239dd1.chunk.js": "/Harvest_Wheels/static/js/453.e2239dd1.chunk.js",
-    "static/media/Background.png": "/Harvest_Wheels/static/media/Background.a0fe5d30e62302f6e136.png",
-    "static/media/Harvest-Wheels.svg": "/Harvest_Wheels/static/media/Harvest-Wheels.765f0019ed434e3a65f4ef34e68242af.svg",
-    "static/media/QR-Code-PNG-Photo.png": "/Harvest_Wheels/static/media/QR-Code-PNG-Photo.9b7199a76187e53b5848.png",
-    "static/media/HW_Logo.jpg": "/Harvest_Wheels/static/media/HW_Logo.09e6b40aecc7c0042a26.jpg",
-    "static/media/user.png": "/Harvest_Wheels/static/media/user.38b097360cd1024e4462.png",
-    "static/media/profile.png": "/Harvest_Wheels/static/media/profile.557587208eb9e232f2ca.png",
-    "static/media/payment.png": "/Harvest_Wheels/static/media/payment.4a714dba7a7941e372eb.png",
-    "static/media/no-results.png": "/Harvest_Wheels/static/media/no-results.96889580d34784864d02.png",
-    "static/media/direction.png": "/Harvest_Wheels/static/media/direction.8e66ae0feef78a8a4e3a.png",
-    "static/media/notification.png": "/Harvest_Wheels/static/media/notification.79872f3c8a9af713fabf.png",
-    "static/media/logout.png": "/Harvest_Wheels/static/media/logout.6c4f8e8fd49324f8e880.png",
-    "static/media/Checkmark.svg": "/Harvest_Wheels/static/media/Checkmark.0a0e33bdf47322a223dca5e1308f893f.svg",
-    "static/media/cross.svg": "/Harvest_Wheels/static/media/cross.c38358021afed5d34049e5ff68faf1bf.svg",
-    "index.html": "/Harvest_Wheels/index.html",
-    "static/media/Menu_Bar.svg": "/Harvest_Wheels/static/media/Menu_Bar.c5a984d4b14501d2d4c3714e22aadd38.svg",
-    "main.21cf99cf.css.map": "/Harvest_Wheels/static/css/main.21cf99cf.css.map",
-    "main.415e834c.js.map": "/Harvest_Wheels/static/js/main.415e834c.js.map",
-    "453.e2239dd1.chunk.js.map": "/Harvest_Wheels/static/js/453.e2239dd1.chunk.js.map"
+    "main.css": "/harvest_wheels/static/css/main.21cf99cf.css",
+    "main.js": "/harvest_wheels/static/js/main.7a59974f.js",
+    "static/js/453.e2239dd1.chunk.js": "/harvest_wheels/static/js/453.e2239dd1.chunk.js",
+    "static/media/Background.png": "/harvest_wheels/static/media/Background.a0fe5d30e62302f6e136.png",
+    "static/media/Harvest-Wheels.svg": "/harvest_wheels/static/media/Harvest-Wheels.765f0019ed434e3a65f4ef34e68242af.svg",
+    "static/media/QR-Code-PNG-Photo.png": "/harvest_wheels/static/media/QR-Code-PNG-Photo.9b7199a76187e53b5848.png",
+    "static/media/HW_Logo.jpg": "/harvest_wheels/static/media/HW_Logo.09e6b40aecc7c0042a26.jpg",
+    "static/media/user.png": "/harvest_wheels/static/media/user.38b097360cd1024e4462.png",
+    "static/media/profile.png": "/harvest_wheels/static/media/profile.557587208eb9e232f2ca.png",
+    "static/media/payment.png": "/harvest_wheels/static/media/payment.4a714dba7a7941e372eb.png",
+    "static/media/no-results.png": "/harvest_wheels/static/media/no-results.96889580d34784864d02.png",
+    "static/media/direction.png": "/harvest_wheels/static/media/direction.8e66ae0feef78a8a4e3a.png",
+    "static/media/notification.png": "/harvest_wheels/static/media/notification.79872f3c8a9af713fabf.png",
+    "static/media/logout.png": "/harvest_wheels/static/media/logout.6c4f8e8fd49324f8e880.png",
+    "static/media/Checkmark.svg": "/harvest_wheels/static/media/Checkmark.0a0e33bdf47322a223dca5e1308f893f.svg",
+    "static/media/cross.svg": "/harvest_wheels/static/media/cross.c38358021afed5d34049e5ff68faf1bf.svg",
+    "index.html": "/harvest_wheels/index.html",
+    "static/media/Menu_Bar.svg": "/harvest_wheels/static/media/Menu_Bar.c5a984d4b14501d2d4c3714e22aadd38.svg",
+    "main.21cf99cf.css.map": "/harvest_wheels/static/css/main.21cf99cf.css.map",
+    "main.7a59974f.js.map": "/harvest_wheels/static/js/main.7a59974f.js.map",
+    "453.e2239dd1.chunk.js.map": "/harvest_wheels/static/js/453.e2239dd1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.21cf99cf.css",
-    "static/js/main.415e834c.js"
+    "static/js/main.7a59974f.js"
   ]
 }
