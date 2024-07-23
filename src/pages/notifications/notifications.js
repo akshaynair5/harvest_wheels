@@ -206,14 +206,8 @@ function Notifications(){
                         if(n.type == 'friend-request'){
                             return(
                                 <div className='notification'>
-                                    <div className='userInfo'>
-                                        <p className='name'>{n.name}</p>
                                         <img src={n.profileUrl}></img>
-                                    </div>
-                                    <div className='price'>
-                                        Friend-Request
-                                    </div>
-
+                                        <p className='info'><b>{n.name}</b> has sent you a friend request!</p>
                                     <div className='btns'>
                                         <img src={tick} onClick={()=>{AcceptFriendReq(n)}}></img>
                                         <img src={cross} onClick={()=>{DeclineFriendReq(n)}}></img>
@@ -224,17 +218,11 @@ function Notifications(){
                         else if(n.type == 'payment-request' && n.uid != userData.uid){
                             return(
                                 <div className='notification'>
-                                    <div className='userInfo'>
-                                        <p className='name'>{n.name}</p>
-                                        <img src={n.profileUrl}></img>
-                                    </div>
-                                    <div className='price'>
-                                        Payment-Request
-                                    </div>
-
+                                    <img src={n.profileURL}></img>
+                                    <p className='info'><b>{n.name}</b> has completed the journey and has sent you a payment request!</p>
                                     <div className='btns'>
-                                        <img src={tick} onClick={()=>{onPay(n)}}></img>
-                                        <img src={cross} onClick={()=>{viewProof(n)}}></img>
+                                        <button onClick={()=>{onPay(n)}}>Pay</button>
+                                        <button onClick={()=>{viewProof(n)}}>Proof</button>
                                     </div>
                                 </div>
                             )
@@ -242,17 +230,10 @@ function Notifications(){
                         else{
                             return(
                                 <div className='notification'>
-                                    <div className='userInfo'>
-                                        <p className='name'>{n.name}</p>
-                                        {/* <img src={n.profileUrl}></img> */}
-                                    </div>
-                                    <div className='price'>
-                                        Approve Payment 
-                                    </div>
-
+                                    <img src={n.profileURL}></img>
+                                    <p className='info'>Approve <b>{n.name}</b>'s payment of ₹{n.price} for the journey on <b>{n.date}</b></p>
                                     <div className='btns'>
                                         <img src={tick} onClick={()=>{approvePayment(n)}}></img>
-                                        {/* <img src={cross} onClick={()=>{viewProof(n)}}></img> */}
                                     </div>
                                 </div>
                             )

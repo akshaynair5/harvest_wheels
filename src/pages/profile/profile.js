@@ -108,14 +108,14 @@ function Profile(){
             await updateDoc(doc(db, 'loadLinks', currentJourney.userId+currentJourney.time), {
                 status:1
             });
-            noti = [{uid:currentUser.uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i].price,tripID:currentJourney.time},...noti]
+            noti = [{uid:currentUser.uid,type:'payment-request',profileURL:userData.profileUrl,name:userData.displayName,id:id,price:currentJourney.loads[i].price,tripID:currentJourney.time,date:currentJourney.date},...noti]
             await updateDoc(doc(db, 'users', `${temp[0].uid}`), {  
                 currentTrip:"",
                 notifications:noti,
                 proof:1,
             });
             let noti2 = userData.notifications
-            noti2 = [{uid:temp[0].uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i].price,approved:false},...noti2]
+            noti2 = [{uid:temp[0].uid,type:'payment-approval',profileURL:temp[0].profileUrl,name:temp[0].displayName,id:id,price:currentJourney.loads[i].price,approved:false,date:currentJourney.date},...noti2]
             await updateDoc(doc(db, 'users', `${currentUser.uid}`), {  
                 notifications:noti2
             });
@@ -455,10 +455,10 @@ function Profile(){
                 {
                     currentJourney && currentJourney.currentPos &&
                     <div className='map'>
-                        {/* {
+                        {
                             currentJourney && currentJourney.currentPos && 
                             <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
-                        } */}
+                        }
                     </div>
                 }
 
@@ -520,7 +520,7 @@ function Profile(){
 
                                                 </ReactMapGl> */}
 
-                                                {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
+                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
                                                 
                                             </div>
                                         }
@@ -596,7 +596,7 @@ function Profile(){
                                                 </div>
                                             </div>
                                             <div className='map'>
-                                                {/* <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe> */}
+                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
                                             </div>
                                             <div className='Details'>
                                                 <p className='d1'><b>Date:</b> {loadLink.date}</p>
