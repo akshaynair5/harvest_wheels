@@ -12,7 +12,7 @@ import tick from '../../images/Checkmark.svg'
 import cross from '../../images/cross.svg'
 import payment from '../../images/payment.png'
 import data from '../../in.json'
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 import noResults from '../../images/no-results.png'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
@@ -191,6 +191,7 @@ function Profile(){
     }
 
     const onSubmit = async()=>{
+
         let now = new Date().getTime()
         let d;
         let c;
@@ -217,6 +218,7 @@ function Profile(){
 
           dist = data.rows[0].elements[0].distance.value / 1000;
           dur = data.rows[0].elements[0].duration.value / (60 * 60);
+          console.log(data.rows)
 
         })
         .catch(error => {
@@ -250,9 +252,9 @@ function Profile(){
             status:0
         }).then(()=>{
             console.log('done')
+            setAV(false)
+            window.location.reload();
         });
-
-        setAV(false)
     } 
 
     const onAccept = async (loadLink,c)=>{
@@ -423,8 +425,14 @@ function Profile(){
                                 <input placeholder='description'  onChange={(e)=>{setDesc(e.target.value)}}></input>
                                 <input type='number' placeholder='Space left(M^2) Approx'  onChange={(e)=>{setSpace(e.target.value)}}></input>
                                 <div className='btns'>
-                                    <button onClick={()=>{setAV(false)}}>Close</button>
-                                    <button onClick={()=>{onSubmit()}} >Post</button>
+                                    <button onClick={() => { setAV(false) }}>Close</button>
+                                    {
+                                        desc === '' || from === '' || to === '' || date === '' || space === 0 || from === to || block === true || 
+                                        new Date(date).getTime() < new Date().getTime() || 
+                                        new Date(date).getTime() > new Date().getTime() + 5 * 24 * 60 * 60 * 1000 ?
+                                        <button disabled>Post</button> : 
+                                        <button onClick={() => { onSubmit() }}>Post</button>
+                                    }
                                 </div>
                             </>
                         }

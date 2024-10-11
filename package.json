@@ -1,9 +1,10 @@
 {
   "name": "harvest_wheels",
-  "homepage":"https://akshaynair5.github.io/Harvest_Wheels",
+  "homepage": "https://akshaynair5.github.io/harvest_wheels",
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "@cashfreepayments/cashfree-js": "^1.0.5",
     "@react-google-maps/api": "^2.19.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -11,6 +12,7 @@
     "firebase": "^10.8.1",
     "fuse.js": "^7.0.0",
     "gh-pages": "^6.1.1",
+    "node-sass": "^7.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.2",
@@ -20,8 +22,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy":"npm run build",
-    "deploy":"gh-pages -d build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

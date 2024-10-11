@@ -11,10 +11,13 @@ import logo from "../../images/HW_Logo.jpg"
 import { db } from "../../firebase_config";
 import { doc, setDoc } from "firebase/firestore"; 
 import './login&register.scss'
+import backImgMob from '../../images/landingPageMob.png'
+import backImg from '../../images/landingPage.png'
 
 function Register (){
     const navigate = useNavigate()
     const [dpLink,setDPLink] = useState('');
+    const [windowWidth,setWindowWidth] = useState(window.innerWidth);
     const [err,setErr] = useState(false)
     const HandleSubmit = async (e) => {
         e.preventDefault();
@@ -68,22 +71,24 @@ function Register (){
         }
     };    
     return(
-        <div className="FormBox">
-            <form onSubmit={(e)=>HandleSubmit(e)}>
-                <input type="text" placeholder="Name" required></input>
-                <input type="email" placeholder="Email-ID" required></input>
-                <input type="number" placeholder="Mobile Number" required></input>
-                <input type='text' placeholder="Job" required></input>
-                <input type='text' placeholder="Place of Residence" required></input>
-                <input type="password" placeholder="Password" required></input>
-                <label htmlFor="Fl"><img src={ProfilePicIcon} style={{height:'50px',alignSelf:'center'}}></img><p style={{marginLeft:'5%'}}>Add Profile Photo</p></label>
-                <input id="Fl" type="file" placeholder="file" style={{display:'none'}} required></input>
-                <label htmlFor="Fl2"><img src={QRImage} style={{height:'50px',alignSelf:'center'}}></img><p style={{marginLeft:'5%'}}>Add Payment QR Code</p></label>
-                <input id="Fl2" type="file" placeholder="file" style={{display:'none'}} required></input>
-                <input type="submit" id="S" value="Register"></input>
-                {err && <span style={{alignSelf:'center'}}>Something went wrong, Try Again</span>}
-                <p style={{width:'26%'}}>Have an Account? <b><Link style={{marginLeft:'2%',textDecoration:'none'}} to="/login">Login Now</Link></b></p>
-            </form>
+        <div className="main" style={{backgroundImage:`url(${windowWidth>768?backImg:backImgMob})`}}>
+            <div className="FormBox">
+                <form onSubmit={(e)=>HandleSubmit(e)}>
+                    <input type="text" placeholder="Name" required></input>
+                    <input type="email" placeholder="Email-ID" required></input>
+                    <input type="number" placeholder="Mobile Number" required></input>
+                    <input type='text' placeholder="Job" required></input>
+                    <input type='text' placeholder="Place of Residence" required></input>
+                    <input type="password" placeholder="Password" required></input>
+                    <label htmlFor="Fl"><img src={ProfilePicIcon} style={{height:'50px',alignSelf:'center'}}></img><p style={{marginLeft:'5%'}}>Add Profile Photo</p></label>
+                    <input id="Fl" type="file" placeholder="file" style={{display:'none'}} required></input>
+                    <label htmlFor="Fl2"><img src={QRImage} style={{height:'50px',alignSelf:'center'}}></img><p style={{marginLeft:'5%'}}>Add Payment QR Code</p></label>
+                    <input id="Fl2" type="file" placeholder="file" style={{display:'none'}} required></input>
+                    <input type="submit" id="S" value="Register"></input>
+                    {err && <span style={{alignSelf:'center'}}>Something went wrong, Try Again</span>}
+                    <p style={{width:'26%'}}>Have an Account? <b><Link style={{marginLeft:'2%',textDecoration:'none'}} to="/login">Login Now</Link></b></p>
+                </form>
+            </div>
         </div>
     )
 }

@@ -12,8 +12,8 @@ import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
-import ReactMapGl from 'react-mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+// import ReactMapGl from 'react-mapbox-gl';
+// import 'mapbox-gl/dist/mapbox-gl.css';
 import data from '../../in.json'
 import { useNavigate } from 'react-router-dom';
 
@@ -38,7 +38,6 @@ function Home(){
 
 
     useEffect(()=>{
-            // console.log(data);
             const FetchUserData = async()=>{
                 const q=query(userRef,where("uid","==",`${currentUser.uid}`))
                 const querySnapShot1 = await getDocs(q)

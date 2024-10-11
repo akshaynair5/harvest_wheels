@@ -1,4 +1,12 @@
-.FormBox{
+.main{
+  height: 100vh;
+  width:100vw;
+  position: fixed;
+  background-size: cover;
+  overflow-y: scroll;
+  // padding-bottom: 40%;
+    
+  .FormBox{
     position: absolute;
     left:27%;
     top:14%;
@@ -121,21 +129,20 @@
   @media only screen and (max-width:400px){
     .FormBox{
       left:12%;
-      top:14%;
+      top:8%;
       width:70%;
-      padding: 2%;
+      padding: 4%;
     }
     .FormBox form input{
-      margin:7%;
+      margin:3%;
       padding: 2%;
     }
     .FormBox form label{
-      margin:3%;
+      margin:1%;
       padding: 1%;
   
     }
     .FormBox form #S{
-      
       width:55%;
       padding: 4%;
       background-color: #282c34;
@@ -165,8 +172,8 @@
       padding-right: 5%;
     }
     .profileBox img{
-      width:130px;
-      height: 120px;
+      width:100px;
+      height: 100px;
       left: 20%;
     }
   }
@@ -191,3 +198,4 @@
       top:-5%;
     }
   }
+}
