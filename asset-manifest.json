@@ -1,8 +1,10 @@
 {
   "files": {
-    "main.css": "/harvest_wheels/static/css/main.21cf99cf.css",
-    "main.js": "/harvest_wheels/static/js/main.7a59974f.js",
+    "main.css": "/harvest_wheels/static/css/main.2f0995fb.css",
+    "main.js": "/harvest_wheels/static/js/main.75406293.js",
     "static/js/453.e2239dd1.chunk.js": "/harvest_wheels/static/js/453.e2239dd1.chunk.js",
+    "static/media/landingPage.png": "/harvest_wheels/static/media/landingPage.bb0995230f3c62c36818.png",
+    "static/media/landingPageMob.png": "/harvest_wheels/static/media/landingPageMob.43bf3243eff028dc0e37.png",
     "static/media/Background.png": "/harvest_wheels/static/media/Background.a0fe5d30e62302f6e136.png",
     "static/media/Harvest-Wheels.svg": "/harvest_wheels/static/media/Harvest-Wheels.765f0019ed434e3a65f4ef34e68242af.svg",
     "static/media/QR-Code-PNG-Photo.png": "/harvest_wheels/static/media/QR-Code-PNG-Photo.9b7199a76187e53b5848.png",
@@ -18,12 +20,12 @@
     "static/media/cross.svg": "/harvest_wheels/static/media/cross.c38358021afed5d34049e5ff68faf1bf.svg",
     "index.html": "/harvest_wheels/index.html",
     "static/media/Menu_Bar.svg": "/harvest_wheels/static/media/Menu_Bar.c5a984d4b14501d2d4c3714e22aadd38.svg",
-    "main.21cf99cf.css.map": "/harvest_wheels/static/css/main.21cf99cf.css.map",
-    "main.7a59974f.js.map": "/harvest_wheels/static/js/main.7a59974f.js.map",
+    "main.2f0995fb.css.map": "/harvest_wheels/static/css/main.2f0995fb.css.map",
+    "main.75406293.js.map": "/harvest_wheels/static/js/main.75406293.js.map",
     "453.e2239dd1.chunk.js.map": "/harvest_wheels/static/js/453.e2239dd1.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.21cf99cf.css",
-    "static/js/main.7a59974f.js"
+    "static/css/main.2f0995fb.css",
+    "static/js/main.75406293.js"
   ]
 }
