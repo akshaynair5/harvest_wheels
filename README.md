@@ -1,7 +1,7 @@
-# Transportation and Logistics Platform
+# Harvest Wheels - Transportation and Logistics Platform
 
 This project is a comprehensive web application that connects farmers, transportation providers, and anyone in need of logistics services. Built using React.js, Firebase, SCSS, and various APIs for distance calculation, it facilitates seamless communication and transaction processes between users. Below, you'll find a detailed overview of the platform's features, functionalities, and setup instructions.
-
+Link - https://akshaynair5.github.io/harvest_wheels/
 ## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
@@ -58,6 +58,8 @@ The Transportation and Logistics Platform aims to streamline the process of find
 
 The Home Page serves as the main dashboard for users. Here, users can see postings from their friends or connections. The page is designed to provide a quick overview of relevant posts and activities.
 
+![image](https://github.com/user-attachments/assets/39da0f76-1cd7-4aa3-99e5-4d11cead129d)
+
 
 ### Explore Page
 
@@ -72,9 +74,8 @@ The Explore Page allows users to browse and search for journey postings across I
 
 The Notifications Page keeps users informed about important updates. This includes friend requests, payment proofs, payment requests, and approvals. The page is organized to ensure users can easily manage and respond to notifications.
 
-_Image placeholder for Notifications Page:_
+![image](https://github.com/user-attachments/assets/9c0b2526-608e-4bab-823a-3e0fac6553e7)
 
-![Notifications Page](path_to_notifications_page_image)
 
 ### Profile Page
 
