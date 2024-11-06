@@ -58,6 +58,7 @@ function Register (){
                 placeOfResidence: POR,
                 links: [],
                 currentTrip: "",
+                currentTrips: [],
                 notifications: [],
                 proof: 0,
                 qrCode: qrLink,

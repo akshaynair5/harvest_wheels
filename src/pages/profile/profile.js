@@ -1,5 +1,5 @@
 import { useCallback, useContext, useEffect, useState } from 'react'
-import { collection, query, updateDoc, where ,or,and, addDoc} from "firebase/firestore";
+import { collection, query, updateDoc, where ,or,and, addDoc, arrayUnion} from "firebase/firestore";
 import pointer from '../../images/pointer.png'
 import line from '../../images/Line.png'
 import { doc, setDoc, getDocs } from "firebase/firestore"; 
@@ -257,31 +257,47 @@ function Profile(){
         });
     } 
 
-    const onAccept = async (loadLink,c)=>{
-        let temp = loadLink.comments;
-
+    const onAccept = async (loadLink, c) => {
+        let temp = [...loadLink.comments];
         let newSpaceLeft = loadLink.spaceLeft - c.space - 1;
-
-        for(let i=0;i<temp.length;i++){
-            if(temp[i].commentId == c.commentId){
-                temp.splice(i,1);
+    
+        // Remove the comment from the comments array
+        for (let i = 0; i < temp.length; i++) {
+            if (temp[i].commentId === c.commentId) {
+                temp.splice(i, 1);
                 break;
             }
         }
-
-        let curT = `${loadLink.time}`;
-
+    
+        // Prepare the trip details to be added to currentTrips
+        const tripDetails = {
+            tripId: loadLink.userId + loadLink.time,
+            start: loadLink.start,
+            destination: loadLink.destination,
+            date: loadLink.date,
+            spaceAllocated: c.space,
+            price: c.price,
+            driverName: loadLink.name,
+            driverProfileURL: loadLink.profileURL,
+        };
+    
+        // Add current trip details for the accepted user
         await updateDoc(doc(db, 'users', c.uid), {
-            currentTrip:curT
+            currentTrip: loadLink.time,
+            currentTrips: arrayUnion(tripDetails),
         });
-        let tempL = loadLink.loads;
-        tempL = [{id:c.uid,name:`${c.name}`,profileURL:`${c.profileURL}`,space:`${c.space}`,price:c.price},...tempL]
-        await updateDoc(doc(db, 'loadLinks', loadLink.userId+loadLink.time), {
-            comments:temp,
+    
+        // Update the loadLink document with the accepted load details and updated comments
+        let tempL = [{ id: c.uid, name: c.name, profileURL: c.profileURL, space: c.space, price: c.price }, ...loadLink.loads];
+        await updateDoc(doc(db, 'loadLinks', loadLink.userId + loadLink.time), {
+            comments: temp,
             spaceLeft: newSpaceLeft,
-            loads:tempL
+            loads: tempL,
         });
-    }
+
+        window.location.reload();
+    };
+    
 
     // useEffect(()=>{
     //     console.log(currentJourney);
@@ -351,7 +367,7 @@ function Profile(){
     }
 
     return(
-        <div className="profile" style={{backgroundImage:`url(${bg})`,backgroundSize:'cover'}}>
+        <div className="profile">
             <Sidebar/>
             {
                 proofPopUp && currentJourney &&
@@ -374,7 +390,7 @@ function Profile(){
                                 <div className='load'>
                                     <img src={load.profileURL}></img>
                                     <p>{load.name}</p>
-                                    <p>{load.price}</p>
+                                    <p>Price: {load.price}</p>
                                     <p>{load.time}</p>
                                 </div>
                             ))
@@ -427,8 +443,7 @@ function Profile(){
                                 <div className='btns'>
                                     <button onClick={() => { setAV(false) }}>Close</button>
                                     {
-                                        desc === '' || from === '' || to === '' || date === '' || space === 0 || from === to || block === true || 
-                                        new Date(date).getTime() < new Date().getTime() || 
+                                        desc === '' || from === '' || to === '' || date === '' || space === 0 || from === to || 
                                         new Date(date).getTime() > new Date().getTime() + 5 * 24 * 60 * 60 * 1000 ?
                                         <button disabled>Post</button> : 
                                         <button onClick={() => { onSubmit() }}>Post</button>
@@ -459,199 +474,197 @@ function Profile(){
                     </div>
                 </div>
                 <button onClick={()=>{addInitializer()}} className='Add'>New Post +</button>
-
-                {
-                    currentJourney && currentJourney.currentPos &&
-                    <div className='map'>
-                        {
-                            currentJourney && currentJourney.currentPos && 
-                            <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`} title="Streets"></iframe>
-                        }
-                    </div>
-                }
-
-
             </div>
+
+            
+            {currentJourney && currentJourney.currentPos && (
+                <div className='tripContainer'>
+                    <div className='map'>
+                        <iframe
+                            width='100%'
+                            height='100%'
+                            src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${currentJourney.currentPos.lat}/${currentJourney.currentPos.lon}`}
+                            title="Map"
+                        ></iframe>
+                    </div>
+                    <div className='tripDetails'>
+                        <p><b>Start Location:</b> {currentJourney.start || 'Not specified'}</p>
+                        <p><b>Destination:</b> {currentJourney.destination || 'Not specified'}</p>
+                        <p><b>Date:</b> {currentJourney.date || 'Not specified'}</p>
+                        <p><b>Space Allocated:</b> {userData.currentTrips[0].spaceAllocated || 'N/A'} m²</p>
+                        <p><b>Price:</b> ₹{currentJourney.price || 'N/A'}</p>
+                        <p><b>Driver:</b> {currentJourney.name || 'Anonymous'}</p>
+                        {currentJourney.driverProfileURL && (
+                            <img className='driverProfile' src={currentJourney.driverProfileURL} alt='Driver Profile' />
+                        )}
+                    </div>
+                </div>
+            )}
+
 
 
             <div className='main'>
                 <div className='loadLinks'>
-                    {
-                        userLinks.length == 0 && 
-                            <div className='disclaimer'>
-                                <img src={noResults}></img>
-                                <p>Your postings section is currently empty. Once you create travel posts, updates and booking details will appear here.</p>
-                            </div>
-                    }
-                    {userLinks.length > 0 && windowWidth < 768 && 
-                        userLinks.map((loadLink)=>{
-                            if(loadLink.type == 'posting'){
-                                let obj
-                                for(let i=0;i<data.length;i++){
-                                    if(data[i].city == `${loadLink.destination}`){
-                                        obj = data[i];
-                                    }
-                                }
-                                return(
-                                    <div className='ll' onClick={()=>{setCC(loadLink.time)}}>
+                    {userLinks.length === 0 && (
+                        <div className='disclaimer'>
+                            <img src={noResults} alt='No results' />
+                            <p>Your postings section is currently empty. Once you create travel posts, updates and booking details will appear here.</p>
+                        </div>
+                    )}
+                    
+                    {userLinks.length > 0 && windowWidth < 768 &&
+                        userLinks.map((loadLink) => {
+                            if (loadLink.type === 'posting') {
+                                let obj = data.find((item) => item.city === loadLink.destination) || {};
+
+                                return (
+                                    <div key={loadLink.time} className='ll' onClick={() => setCC(loadLink.time)}>
                                         <div className='request'>
-                                        <div className='r1'>
-                                            <div className='userInfo'>
-                                                <p className='name'>{loadLink.name}</p>
-                                                <img src={loadLink.profileURL}></img>
-                                            </div>
-                                            <div className='travelInfo'>
-                                                <img src={line} className='line'></img>
-                                                <div className='info'>
-                                                    <img src={pointer}></img>
-                                                    <p>{loadLink.start}</p>
+                                            <div className='r1'>
+                                                <div className='userInfo'>
+                                                    <p className='name'>{loadLink.name || 'Anonymous'}</p>
+                                                    <img src={loadLink.profileURL} alt='User Profile' />
                                                 </div>
-                                                <div className='info'>
-                                                    <img src={pointer}></img>
-                                                    <p>{loadLink.destination}</p>
+                                                <div className='travelInfo'>
+                                                    <img src={line} className='line' alt='Line' />
+                                                    <div className='info'>
+                                                        <img src={pointer} alt='Start location' />
+                                                        <p>{loadLink.start || 'Unknown'}</p>
+                                                    </div>
+                                                    <div className='info'>
+                                                        <img src={pointer} alt='Destination' />
+                                                        <p>{loadLink.destination || 'Unknown'}</p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        {
-                                            obj && 
-                                            <div className='map'>
-                                                {/* <ReactMapGl
-                                                    mapboxAccessToken = {TOKEN}
-                                                    initailViewState={{
-                                                        longitude:28.6448,
-                                                        latitude:78.004,
-                                                        zoom:6
-                                                    }}
-                                                    mapStyle = "https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=view&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=true&fresh=true#2/37.75/-92.25"
-
-                                                >
-
-                                                </ReactMapGl> */}
-
-                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
-                                                
+                                            {obj.lat && obj.lng ? (
+                                                <div className='map'>
+                                                    <iframe
+                                                        width='100%'
+                                                        height='100%'
+                                                        src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`}
+                                                        title='Map'
+                                                    ></iframe>
+                                                </div>
+                                            ) : (
+                                                <p className='noMap'>Map data is not available for this location.</p>
+                                            )}
+                                            <div className='Details'>
+                                                <p className='d1'><b>Date:</b> {loadLink.date || 'Not specified'}</p>
+                                                <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft ? `${loadLink.spaceLeft}m²` : 'N/A'}</p>
+                                                <input
+                                                    type='button'
+                                                    className='bookBtn'
+                                                    onClick={() => viewLoads(loadLink)}
+                                                    value='View Loads'
+                                                />
                                             </div>
-                                        }
-                                        <div className='Details'>
-                                            <p className='d1'><b>Date:</b> {loadLink.date}</p>
-                                            <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
-                                            <input type='button' className='bookBtn' onClick={()=>{viewLoads(loadLink)}} placeholder='View Loads' value='View Loads'></input>
                                         </div>
-                                        </div>
-                                        {
-                                            currentComment == loadLink.time && 
+                                        {currentComment === loadLink.time && (
                                             <div className='comments'>
-                                                {
-                                                    loadLink.comments.map((c)=>(
-                                                        <div className='comment'>
+                                                {loadLink.comments.length > 0 ? (
+                                                    loadLink.comments.map((c) => (
+                                                        <div key={c.id} className='comment'>
                                                             <div className='userInfo'>
-                                                                <p className='name'>{c.name}</p>
-                                                                <img src={c.profileURL}></img>
+                                                                <p className='name'>{c.name || 'Anonymous'}</p>
+                                                                <img src={c.profileURL} alt='Commenter Profile' />
                                                             </div>
                                                             <div className='price'>
-                                                                Offered Price : ₹{c.price}
+                                                                Offered Price: ₹{c.price || 'N/A'}
                                                             </div>
-
                                                             <div className='btns'>
-                                                                <img src={tick} onClick={()=>{onAccept(loadLink,c)}}></img>
-                                                                <img src={cross}></img>
+                                                                <img src={tick} onClick={() => onAccept(loadLink, c)} alt='Accept' />
+                                                                <img src={cross} alt='Reject' />
                                                             </div>
                                                         </div>
                                                     ))
-                                                }
+                                                ) : (
+                                                    <p>No comments available.</p>
+                                                )}
                                             </div>
-                                        }
+                                        )}
                                     </div>
-                                )
-                            }
-                            else{
-                                return(
-                                    <div className='proposal'>
-                                        <p>Start: {loadLink.start}</p>
-                                        <p>destination: {loadLink.destination}</p>
-                                        <p>date {loadLink.date}</p>
-                                        <p>Details {loadLink.details}</p>
-                                    </div>
-                                )
+                                );
                             }
                         })
                     }
+                    
                     {userLinks.length > 0 && windowWidth > 768 &&
-                        userLinks.map((loadLink)=>{
-                            if(loadLink.type == 'posting'){
-                                let obj
-                                for(let i=0;i<data.length;i++){
-                                    if(data[i].city == `${loadLink.destination}`){
-                                        obj = data[i];
-                                    }
-                                }
-                                return(
-                                    <div className='ll' onClick={()=>{setCC(loadLink.time)}}>
+                        userLinks.map((loadLink) => {
+                            if (loadLink.type === 'posting') {
+                                let obj = data.find((item) => item.city === loadLink.destination) || {};
+
+                                return (
+                                    <div key={loadLink.time} className='ll' onClick={() => setCC(loadLink.time)}>
                                         <div className='request'>
                                             <div className='userInfo'>
-                                                <p className='name'>{loadLink.name}</p>
-                                                <img src={loadLink.profileURL}></img>
+                                                <p className='name'>{loadLink.name || 'Anonymous'}</p>
+                                                <img src={loadLink.profileURL} alt='User Profile' />
                                             </div>
                                             <div className='travelInfo'>
-                                                {/* <img src={line} className='line'></img> */}
                                                 <div className='info'>
-                                                    <img src={pointer}></img>
-                                                    <p>{loadLink.start}</p>
+                                                    <img src={pointer} alt='Start location' />
+                                                    <p>{loadLink.start || 'Unknown'}</p>
                                                 </div>
                                                 <div className='info'>
-                                                    <img src={pointer}></img>
-                                                    <p>{loadLink.destination}</p>
+                                                    <img src={pointer} alt='Destination' />
+                                                    <p>{loadLink.destination || 'Unknown'}</p>
                                                 </div>
                                             </div>
-                                            <div className='map'>
-                                                <iframe width='100%' height='100%' src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`} title="Streets"></iframe>
-                                            </div>
+                                            {obj.lat && obj.lng ? (
+                                                <div className='map'>
+                                                    <iframe
+                                                        width='100%'
+                                                        height='100%'
+                                                        src={`https://api.mapbox.com/styles/v1/akshaynair995/clvjqx0bm01af01qz39u11hnv.html?title=false&access_token=pk.eyJ1IjoiYWtzaGF5bmFpcjk5NSIsImEiOiJjbHZqcTM0ZmsxcGd5MnFwNWYwdWRkMjIyIn0.3VLRXtyCA0xprjZjInIj2w&zoomwheel=false#2/${obj.lat}/${obj.lng}`}
+                                                        title='Map'
+                                                    ></iframe>
+                                                </div>
+                                            ) : (
+                                                <p className='noMap'>Map data is not available for this location.</p>
+                                            )}
                                             <div className='Details'>
-                                                <p className='d1'><b>Date:</b> {loadLink.date}</p>
-                                                <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft}m/s^2</p>
-                                                <input type='button' className='bookBtn' onClick={()=>{viewLoads(loadLink)}} placeholder='View Loads' value='View Loads'></input>
+                                                <p className='d1'><b>Date:</b> {loadLink.date || 'Not specified'}</p>
+                                                <p className='d1'><b>Space Left:</b> {loadLink.spaceLeft ? `${loadLink.spaceLeft}m²` : 'N/A'}</p>
+                                                <input
+                                                    type='button'
+                                                    className='bookBtn'
+                                                    onClick={() => viewLoads(loadLink)}
+                                                    value='View Loads'
+                                                />
                                             </div>
                                         </div>
-                                        {
-                                            currentComment == loadLink.time && 
+                                        {currentComment === loadLink.time && (
                                             <div className='comments'>
-                                                {
-                                                    loadLink.comments.map((c)=>(
-                                                        <div className='comment'>
+                                                {loadLink.comments.length > 0 ? (
+                                                    loadLink.comments.map((c) => (
+                                                        <div key={c.id} className='comment'>
                                                             <div className='userInfo'>
-                                                                <p className='name'>{c.name}</p>
-                                                                <img src={c.profileURL}></img>
+                                                                <p className='name'>{c.name || 'Anonymous'}</p>
+                                                                <img src={c.profileURL} alt='Commenter Profile' />
                                                             </div>
                                                             <div className='price'>
-                                                                Offered Price : ₹{c.price}
+                                                                Offered Price: ₹{c.price || 'N/A'}
                                                             </div>
-
                                                             <div className='btns'>
-                                                                <img src={tick} onClick={()=>{onAccept(loadLink,c)}}></img>
-                                                                <img src={cross}></img>
+                                                                <img src={tick} onClick={() => onAccept(loadLink, c)} alt='Accept' />
+                                                                <img src={cross} alt='Reject' />
                                                             </div>
                                                         </div>
                                                     ))
-                                                }
+                                                ) : (
+                                                    <p>No comments available.</p>
+                                                )}
                                             </div>
-                                        }
+                                        )}
                                     </div>
-                                )
-                            }
-                            else{
-                                return(
-                                    <div className='proposal'>
-                                        <p>Start: {loadLink.start}</p>
-                                        <p>destination: {loadLink.destination}</p>
-                                        <p>date {loadLink.date}</p>
-                                        <p>Details {loadLink.details}</p>
-                                    </div>
-                                )
+                                );
                             }
                         })
                     }
                 </div>
             </div>
+
         </div>
     )
 }

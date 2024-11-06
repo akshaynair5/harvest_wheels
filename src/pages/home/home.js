@@ -12,12 +12,9 @@ import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase_config'
 import { getDocs, doc } from "firebase/firestore";
 import { Authcontext } from '../../contextProvider'
-// import ReactMapGl from 'react-mapbox-gl';
-// import 'mapbox-gl/dist/mapbox-gl.css';
 import data from '../../in.json'
 import { useNavigate } from 'react-router-dom';
 
-const TOKEN = process.env.API_ACCESS_TOKEN
 
 function Home(){
 
@@ -123,7 +120,7 @@ function Home(){
         console.log(space)
     },[space])
     return(
-        <div className='Home' style={{backgroundImage:`url(${bg})`}}>
+        <div className='Home'>
             <Sidebar/>
             <div className='Main'>
 

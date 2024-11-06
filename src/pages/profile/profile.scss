@@ -557,12 +557,10 @@
 
 @media only screen and (min-width:768px){
     .profile{
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
         overflow-y: scroll;
-        padding-bottom: 15vh;
-
+        height: 100vh;
+        width: 100vw;
+        overflow-x: hidden;
         .currentLoads{
             position: fixed;
             top: 0;
@@ -592,15 +590,15 @@
                     display: flex;
                     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
                     img{
-                        height: 90%;
-                        margin-left: 5%;
-                        margin-top: 5%;
-                        border-radius: 10px;
-                        margin-right: 5%;
+                        align-self: center;
+                        height: 80%;
+                        margin-left: 4%;
                     }
                     p{
-                        margin-left: 10%;
-                        margin-right: 10%;
+                        margin-left: 5%;
+                        margin-right: 5%;
+                        width: 30%;
+                        text-align: center;
                     }
                 }
             }
@@ -855,6 +853,7 @@
         }
     
         .topBar{
+            display: flex;
             .info{
                 width: 60vw;
                 min-height: 40vh;
@@ -885,15 +884,13 @@
             }
             
             .Add {
-
-                position: absolute;
                 left: 75%;
                 width: 10vw;
                 background-color: green;
                 border: none;
                 padding: 2vh;
-                top:32vh;
                 cursor: pointer;
+                align-self: center;
 
                 background-color: #FFFFFF;
                 border: 1px solid green;
@@ -934,16 +931,76 @@
             cursor: not-allowed;
             opacity: 1;
             }
-
-            .map{
-                width: 80vw;
-                height: 45vh;
-                margin-left: 10vw;
-                margin-top: 5vh;
-                background-color: gray;
-                border-radius: 10px;
-            }
         }
+
+/* Main container for the trip details and map */
+.tripContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+}
+
+/* Styling for the trip details */
+.tripDetails {
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    color: #333;
+    line-height: 1.5;
+    padding: 5%;
+}
+
+.tripDetails p {
+    margin: 5px 0;
+}
+
+/* Profile image styling */
+.driverProfile {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Map container styling */
+.map {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.map iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tripContainer {
+        flex-direction: column;
+    }
+
+    .map {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .map {
+        height: 200px;
+    }
+}
+
     
         .main{
             width: 90vw;
@@ -952,8 +1009,9 @@
             margin-left: 5vw;
             height: 80vh;
             border: none;
-            // background-color: black;
+            position: relative;
             box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+            overflow-x: hidden;
     
             .loadLinks{
                 height: 70vh;
